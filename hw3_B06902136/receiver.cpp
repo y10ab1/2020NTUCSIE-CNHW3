@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
     while (1)
     {
         // get the size of a frame in bytes
-/*
+        /*
         while (1)
         {
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
@@ -185,8 +185,8 @@ int main(int argc, char *argv[])
 
         // copy a fream from buffer to the container on client
         uchar *iptr = imgClient.data;
-        memcpy(imgClient.data, buffer, imgSize);
-
+        memcpy(iptr, buffer, imgSize);
+        startWindowThread();
         imshow("Video", imgClient);
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
