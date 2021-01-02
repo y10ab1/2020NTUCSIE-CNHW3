@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
 
         // copy a fream from buffer to the container on client
         uchar *iptr = imgClient.data;
-        memcpy(iptr, buffer, imgSize);
+        memcpy(imgClient.data, buffer, imgSize);
 
         imshow("Video", imgClient);
         //Press ESC on keyboard to exit
