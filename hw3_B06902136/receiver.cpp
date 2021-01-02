@@ -106,6 +106,7 @@ int main(int argc, char* argv[])
     char *h = strtok(NULL," ");
     int width = atoi(w);
     int height = atoi(h);
+
     //allocate container to load frames
     imgClient = Mat::zeros(height,width, CV_8UC3);
     // ensure the memory is continuous (for efficiency issue.)

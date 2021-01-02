@@ -1,2 +1,2 @@
-./receiver local local 8888 8889
+./sender loacl loacl 8887 8888 ./tmp.mpg
 
