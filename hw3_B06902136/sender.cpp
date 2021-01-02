@@ -37,8 +37,8 @@ int main(int argc, char* argv[])
     int sendersocket, portNum, nBytes;
     char videoname[1000];
     segment s_tmp;
-    struct sockaddr_in sender, agent;
-    socklen_t sender_size, agent_size;
+    struct sockaddr_in sender, agent, tmp_addr;
+    socklen_t sender_size, agent_size, tmp_size;
     char ip[2][50];
     int port[2], i;
 
@@ -81,14 +81,17 @@ int main(int argc, char* argv[])
     sender_size = sizeof(sender);
     agent_size = sizeof(agent);
 
+
     int segment_size, index = 0;
+
 
     // server
     Mat imgServer;
-    VideoCapture *cap = new VideoCapture(videoname);
+    VideoCapture cap;
+    cap.open(videoname);
     // get the resolution of the video
-    int width = cap->get(CV_CAP_PROP_FRAME_WIDTH);
-    int height = cap->get(CV_CAP_PROP_FRAME_HEIGHT);
+    int width = cap.get(CV_CAP_PROP_FRAME_WIDTH);
+    int height = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
     //tell client the resolution
     memset(&s_tmp, 0, sizeof(s_tmp));
     s_tmp.head.fin = 1;
@@ -129,7 +132,7 @@ int main(int argc, char* argv[])
     while(1)
     {
         //get a frame from the video to the container on server.
-        *cap >> imgServer;
+        cap >> imgServer;
 
         // get the size of a frame in bytes
         int imgSize = imgServer.total() * imgServer.elemSize();
@@ -218,6 +221,6 @@ int main(int argc, char* argv[])
         }
     }
     ////////////////////////////////////////////////////
-	cap->release();
+	cap.release();
     return 0;
 }

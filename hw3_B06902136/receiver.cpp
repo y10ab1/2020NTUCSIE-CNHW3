@@ -8,6 +8,7 @@
 #include "opencv2/opencv.hpp"
 
 using namespace cv;
+using namespace std;
 
 typedef struct {
 	int length;
@@ -37,8 +38,8 @@ int main(int argc, char* argv[])
     int receiversocket, portNum, nBytes;
     char videoname[1000];
     segment s_tmp;
-    struct sockaddr_in agent, receiver;
-    socklen_t agent_size, recv_size;
+    struct sockaddr_in agent, receiver, tmp_addr;
+    socklen_t agent_size, recv_size, tmp_size;
     char ip[2][50];
     int port[2], i;
     
@@ -79,7 +80,9 @@ int main(int argc, char* argv[])
     agent_size = sizeof(agent);
     recv_size = sizeof(receiver);
 
+
     int segment_size, index = 0;
+
 
     // client
     Mat imgClient;
@@ -105,7 +108,7 @@ int main(int argc, char* argv[])
     //char *w = strtok(resolution," ");
     //char *h = strtok(NULL," ");
     int width = atoi(strtok(resolution," "));
-    int height = 540;//atoi(strtok(NULL," "));
+    int height = atoi(strtok(NULL," "));
 
     //allocate container to load frames
     imgClient = Mat::zeros(height,width, CV_8UC3);
