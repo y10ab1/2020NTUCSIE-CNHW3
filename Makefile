@@ -15,7 +15,7 @@ SENDER = sender.cpp
 RECEIVER = receiver.cpp
 SND = sender
 REV = receiver
-all: server client openCV agent
+all: openCV agent sender receiver
   
 server: $(SERVER)
 	$(CC) $(SERVER) -o $(SER)  $(OPENCV) $(PTHREAD) $(c11)
@@ -24,7 +24,7 @@ client: $(CLIENT)
 opencv: openCV.cpp
 	$(CC) openCV.cpp -o openCV $(OPENCV) $(c11)
 agent: agent.c
-	gcc agent.c -o agent
+	$(CC) agent.cpp -o agent $(OPENCV) $(c11)
 sender: $(SENDER)
 	$(CC) $(SENDER) -o $(SND)  $(OPENCV) $(PTHREAD) $(c11)
 receiver: $(RECEIVER)
@@ -37,4 +37,4 @@ tests: $(tests)
 .PHONY: clean
 
 clean:
-	rm $(CLI) $(SER) openCV
+	rm $(CLI) $(SER) openCV $(REV) $(SND)
