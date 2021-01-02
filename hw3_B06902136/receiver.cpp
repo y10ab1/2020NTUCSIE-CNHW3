@@ -10,30 +10,35 @@
 using namespace cv;
 using namespace std;
 
-typedef struct {
-	int length;
-	int seqNumber;
-	int ackNumber;
-	int fin;
-	int syn;
-	int ack;
+typedef struct
+{
+    int length;
+    int seqNumber;
+    int ackNumber;
+    int fin;
+    int syn;
+    int ack;
 } header;
 
-typedef struct{
-	header head;
-	char data[1000];
+typedef struct
+{
+    header head;
+    char data[1000];
 } segment;
 
-void setIP(char *dst, char *src) {
-    if(strcmp(src, "0.0.0.0") == 0 || strcmp(src, "local") == 0
-            || strcmp(src, "localhost")) {
+void setIP(char *dst, char *src)
+{
+    if (strcmp(src, "0.0.0.0") == 0 || strcmp(src, "local") == 0 || strcmp(src, "localhost"))
+    {
         sscanf("127.0.0.1", "%s", dst);
-    } else {
+    }
+    else
+    {
         sscanf(src, "%s", dst);
     }
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     int receiversocket, portNum, nBytes;
     char videoname[1000];
@@ -42,10 +47,10 @@ int main(int argc, char* argv[])
     socklen_t agent_size, recv_size, tmp_size;
     char ip[2][50];
     int port[2], i;
-    
-    if(argc != 5)
+
+    if (argc != 5)
     {
-        fprintf(stderr,"用法: %s <agent IP> <recv IP> <agent port> <recv port>\n", argv[0]);
+        fprintf(stderr, "用法: %s <agent IP> <recv IP> <agent port> <recv port>\n", argv[0]);
         fprintf(stderr, "例如: ./receiver 127.0.0.1 127.0.0.1 8888 8889\n");
         exit(1);
     }
@@ -74,27 +79,25 @@ int main(int argc, char* argv[])
     memset(receiver.sin_zero, '\0', sizeof(receiver.sin_zero));
 
     /*bind socket*/
-    bind(receiversocket,(struct sockaddr *)&receiver,sizeof(receiver)); 
+    bind(receiversocket, (struct sockaddr *)&receiver, sizeof(receiver));
 
     /*Initialize size variable to be used later on*/
     agent_size = sizeof(agent);
     recv_size = sizeof(receiver);
 
-
     int segment_size, index = 0;
-
 
     // client
     Mat imgClient;
     // get the resolution of the video
     char resolution[1000] = {0};
-    while(1)
+    while (1)
     {
         segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
-        if(segment_size > 0)
+        if (segment_size > 0)
         {
-            printf("recv	data	#%d\n",index);
-            sprintf(resolution,"%s",s_tmp.data);
+            printf("recv	data	#%d\n", index);
+            sprintf(resolution, "%s", s_tmp.data);
             memset(&s_tmp, 0, sizeof(s_tmp));
             s_tmp.head.ack = 1;
             s_tmp.head.ackNumber = index;
@@ -107,26 +110,27 @@ int main(int argc, char* argv[])
     }
     //char *w = strtok(resolution," ");
     //char *h = strtok(NULL," ");
-    int width = atoi(strtok(resolution," "));
-    int height = atoi(strtok(NULL," "));
+    int width = atoi(strtok(resolution, " "));
+    int height = atoi(strtok(NULL, " "));
 
     //allocate container to load frames
-    imgClient = Mat::zeros(height,width, CV_8UC3);
+    imgClient = Mat::zeros(height, width, CV_8UC3);
     // ensure the memory is continuous (for efficiency issue.)
-    if(!imgClient.isContinuous())
+    if (!imgClient.isContinuous())
     {
         imgClient = imgClient.clone();
     }
-    while(1)
+    while (1)
     {
         // get the size of a frame in bytes
         int imgSize;
-        while(1)
+        while (1)
         {
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
-            if(segment_size > 0)
+            if (segment_size > 0)
             {
-                printf("recv	data	#%d\n",index);
+                printf("recv	data	#%d\n", index);
+                cout << "recv size: " << segment_size << endl;
                 imgSize = atoi(s_tmp.data);
                 memset(&s_tmp, 0, sizeof(s_tmp));
                 s_tmp.head.ack = 1;
@@ -144,15 +148,15 @@ int main(int argc, char* argv[])
         // get the frame
         int leftSize = imgSize;
         uchar *ptr = buffer;
-        while(leftSize > 0)
+        while (leftSize > 0)
         {
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
-            if(segment_size > 0)
+            if (segment_size > 0)
             {
-                if(s_tmp.head.seqNumber == index)
+                if (s_tmp.head.seqNumber == index)
                 {
-                    printf("recv	data	#%d\n",index);
-                    memcpy(ptr,s_tmp.data,sizeof(s_tmp.data));
+                    printf("recv	data	#%d\n", index);
+                    memcpy(ptr, s_tmp.data, sizeof(s_tmp.data));
                     int recvSize = sizeof(s_tmp.data);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                     s_tmp.head.ack = 1;
@@ -166,7 +170,7 @@ int main(int argc, char* argv[])
                 }
                 else
                 {
-                    printf("recv	data	#%d\n",index);
+                    printf("recv	data	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                     s_tmp.head.ack = 1;
                     s_tmp.head.ackNumber = index;
@@ -180,19 +184,19 @@ int main(int argc, char* argv[])
 
         // copy a fream from buffer to the container on client
         uchar *iptr = imgClient.data;
-        memcpy(iptr,buffer,imgSize);
+        memcpy(iptr, buffer, imgSize);
 
         imshow("Video", imgClient);
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
         // waitKey means a delay to get the next frame.
         char c = (char)waitKey(33.3333);
-        if(c==27)
+        if (c == 27)
         {
             break;
         }
     }
     ////////////////////////////////////////////////////
-	destroyAllWindows();
+    destroyAllWindows();
     return 0;
 }
