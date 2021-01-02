@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     while (1)
     {
         // get the size of a frame in bytes
-        
+        /*
         while (1)
         {
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
                 index++;
                 break;
             }
-        }
+        }*/
 
         // allocate a buffer to load the frame (there would be 2 buffers in the world of the Internet)
         uchar buffer[imgSize];
@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
         uchar *iptr = imgClient.data;
         memcpy(iptr, buffer, imgSize);
         startWindowThread();
-        imshow("Video", imgClient);
+        imshow("Video", &iptr);
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
         // waitKey means a delay to get the next frame.
