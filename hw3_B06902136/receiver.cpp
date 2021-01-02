@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
         uchar *iptr = imgClient.data;
         memcpy(iptr, buffer, imgSize);
         startWindowThread();
-        imshow("Video", &iptr);
+        imshow("Video", iptr);
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
         // waitKey means a delay to get the next frame.
