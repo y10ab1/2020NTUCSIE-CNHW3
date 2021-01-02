@@ -19,20 +19,33 @@
 using namespace std;
 using namespace cv;
 
-
-typedef struct {
-	int length;
-	int seqNumber;
-	int ackNumber;
-	int fin;
-	int syn;
-	int ack;
+typedef struct
+{
+    int length;
+    int seqNumber;
+    int ackNumber;
+    int fin;
+    int syn;
+    int ack;
 } header;
 
-typedef struct{
-	header head;
-	char data[1000];
+typedef struct
+{
+    header head;
+    char data[1000];
 } segment;
+
+void setIP(char *dst, char *src)
+{
+    if (strcmp(src, "0.0.0.0") == 0 || strcmp(src, "local") == 0 || strcmp(src, "localhost"))
+    {
+        sscanf("127.0.0.1", "%s", dst);
+    }
+    else
+    {
+        sscanf(src, "%s", dst);
+    }
+}
 
 int countt = 0;
 string IP;
@@ -48,9 +61,11 @@ int main(int argc, char *argv[])
     tv.tv_sec = 3;
     tv.tv_usec = 0;
 
-    if (argc < 2)
+    if (argc != 5)
     {
-        cout << "Command not found.\n";
+        fprintf(stderr, "用法: %s <agent IP> <recv IP> <agent port> <recv port>\n", argv[0]);
+        fprintf(stderr, "例如: ./receiver 127.0.0.1 127.0.0.1 8888 8889\n");
+        exit(1);
     }
     else
     {
@@ -98,20 +113,20 @@ int main(int argc, char *argv[])
         if (strncmp("play", Message, 4) == 0)
         {
             int QUIT = 0;
-
-            string filename;
-            cin >> filename; //video file name
-            if (filename.find(".mpg") == string::npos)
-            {
-                cout << "The " << filename << " is not a mpg file." << endl;
-                continue;
-            }
-
-            sent = send(localSocket, Message, strlen(Message), MSG_WAITALL);
-            bzero(Message, sizeof(char) * BUFF_SIZE);
-            sleep(1);
-            sent = send(localSocket, filename.c_str(), strlen(filename.c_str()), MSG_WAITALL);
-
+        /*
+        *    string filename;
+        *    cin >> filename; //video file name
+        *    if (filename.find(".mpg") == string::npos)
+        *    {
+        *        cout << "The " << filename << " is not a mpg file." << endl;
+        *        continue;
+        *    }
+        *
+        *  sent = send(localSocket, Message, strlen(Message), MSG_WAITALL);
+        *  bzero(Message, sizeof(char) * BUFF_SIZE);
+        *   sleep(1);
+        *    sent = send(localSocket, filename.c_str(), strlen(filename.c_str()), MSG_WAITALL);
+        */
             // get the resolution of the video
             Mat imgClient;
 

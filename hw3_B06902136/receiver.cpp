@@ -102,10 +102,10 @@ int main(int argc, char* argv[])
             break;
         }
     }
-    char *w = strtok(resolution," ");
-    char *h = strtok(NULL," ");
-    int width = atoi(w);
-    int height = atoi(h);
+    //char *w = strtok(resolution," ");
+    //char *h = strtok(NULL," ");
+    int width = atoi(strtok(resolution," "));
+    int height = atoi(strtok(NULL," "));
 
     //allocate container to load frames
     imgClient = Mat::zeros(height,width, CV_8UC3);
