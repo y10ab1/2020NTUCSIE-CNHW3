@@ -121,6 +121,7 @@ int main(int argc, char *argv[])
         imgClient = imgClient.clone();
     }
     int imgSize = imgClient.total() * imgClient.elemSize();
+    cout << "imgSize: " << imgSize << endl;
     while (1)
     {
         // get the size of a frame in bytes
