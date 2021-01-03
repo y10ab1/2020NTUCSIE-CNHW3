@@ -23,7 +23,7 @@ typedef struct
 typedef struct
 {
     header head;
-    char data[1000];
+    char data[4096];
 } segment;
 
 void setIP(char *dst, char *src)
@@ -36,6 +36,24 @@ void setIP(char *dst, char *src)
     {
         sscanf(src, "%s", dst);
     }
+}
+
+cv::Mat TransBufferToMat(unsigned char *pBuffer, int nWidth, int nHeight, int nBandNum = 3, int nBPB = 1)
+{
+    cv::Mat mDst;
+
+    mDst = cv::Mat::zeros(cv::Size(nWidth, nHeight), CV_8UC3);
+
+    for (int j = 0; j < nHeight; ++j)
+    {
+        unsigned char *data = mDst.ptr<unsigned char>(j);
+        unsigned char *pSubBuffer = pBuffer + (nHeight - 1 - j) * nWidth * nBandNum * nBPB;
+        memcpy(data, pSubBuffer, nWidth * nBandNum * nBPB);
+    }
+
+    cv::cvtColor(mDst, mDst, COLOR_RGB2BGR);
+
+    return mDst;
 }
 
 int main(int argc, char *argv[])
@@ -89,6 +107,7 @@ int main(int argc, char *argv[])
 
     // client
     Mat imgClient;
+    Mat imgTemp;
     // get the resolution of the video
     char resolution[1000] = {0};
     while (1)
@@ -188,7 +207,7 @@ int main(int argc, char *argv[])
         uchar *iptr = imgClient.data;
         memcpy(iptr, buffer, imgSize);
         startWindowThread();
-        imshow("Video", iptr);
+        imshow("Video", imgClient);
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
         // waitKey means a delay to get the next frame.

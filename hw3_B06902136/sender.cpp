@@ -9,30 +9,35 @@
 
 using namespace cv;
 
-typedef struct {
-	int length;
-	int seqNumber;
-	int ackNumber;
-	int fin;
-	int syn;
-	int ack;
+typedef struct
+{
+    int length;
+    int seqNumber;
+    int ackNumber;
+    int fin;
+    int syn;
+    int ack;
 } header;
 
-typedef struct{
-	header head;
-	char data[1000];
+typedef struct
+{
+    header head;
+    char data[4096];
 } segment;
 
-void setIP(char *dst, char *src) {
-    if(strcmp(src, "0.0.0.0") == 0 || strcmp(src, "local") == 0
-            || strcmp(src, "localhost")) {
+void setIP(char *dst, char *src)
+{
+    if (strcmp(src, "0.0.0.0") == 0 || strcmp(src, "local") == 0 || strcmp(src, "localhost"))
+    {
         sscanf("127.0.0.1", "%s", dst);
-    } else {
+    }
+    else
+    {
         sscanf(src, "%s", dst);
     }
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     int sendersocket, portNum, nBytes;
     char videoname[1000];
@@ -42,9 +47,9 @@ int main(int argc, char* argv[])
     char ip[2][50];
     int port[2], i;
 
-    if(argc != 6)
+    if (argc != 6)
     {
-        fprintf(stderr,"用法: %s <sender IP> <agent IP> <sender port> <agent port> <videoname>\n", argv[0]);
+        fprintf(stderr, "用法: %s <sender IP> <agent IP> <sender port> <agent port> <videoname>\n", argv[0]);
         fprintf(stderr, "例如: ./sender 127.0.0.1 127.0.0.1 8887 8888 tmp.mpg\n");
         exit(1);
     }
@@ -56,7 +61,7 @@ int main(int argc, char* argv[])
         sscanf(argv[3], "%d", &port[0]);
         sscanf(argv[4], "%d", &port[1]);
 
-        sscanf(argv[5], "%s",videoname);
+        sscanf(argv[5], "%s", videoname);
     }
 
     /*Create UDP socket*/
@@ -69,7 +74,7 @@ int main(int argc, char* argv[])
     memset(sender.sin_zero, '\0', sizeof(sender.sin_zero));
 
     /*bind socket*/
-    bind(sendersocket,(struct sockaddr *)&sender,sizeof(sender));
+    bind(sendersocket, (struct sockaddr *)&sender, sizeof(sender));
 
     /*Configure settings in agent struct*/
     agent.sin_family = AF_INET;
@@ -81,9 +86,7 @@ int main(int argc, char* argv[])
     sender_size = sizeof(sender);
     agent_size = sizeof(agent);
 
-
     int segment_size, index = 0;
-
 
     // server
     Mat imgServer;
@@ -96,20 +99,20 @@ int main(int argc, char* argv[])
     memset(&s_tmp, 0, sizeof(s_tmp));
     s_tmp.head.fin = 1;
     s_tmp.head.seqNumber = index;
-    sprintf(s_tmp.data,"%d %d",width,height);
-    while(1)
+    sprintf(s_tmp.data, "%d %d", width, height);
+    while (1)
     {
         segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-        if(segment_size > 0)
+        if (segment_size > 0)
         {
-            printf("send	data	#%d\n",index);
+            printf("send	data	#%d\n", index);
             memset(&s_tmp, 0, sizeof(s_tmp));
-            while(1)
+            while (1)
             {
                 segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
-                if(segment_size > 0)
+                if (segment_size > 0)
                 {
-                    if(s_tmp.head.ackNumber == index)
+                    if (s_tmp.head.ackNumber == index)
                     {
                         printf("get     ack	#%d\n", index);
                         memset(&s_tmp, 0, sizeof(s_tmp));
@@ -122,14 +125,14 @@ int main(int argc, char* argv[])
         }
     }
     //allocate container to load frames
-    imgServer = Mat::zeros(height,width, CV_8UC3);
+    imgServer = Mat::zeros(height, width, CV_8UC3);
     // ensure the memory is continuous (for efficiency issue.)
-    if(!imgServer.isContinuous())
+    if (!imgServer.isContinuous())
     {
         imgServer = imgServer.clone();
     }
 
-    while(1)
+    while (1)
     {
         //get a frame from the video to the container on server.
         cap >> imgServer;
@@ -138,21 +141,21 @@ int main(int argc, char* argv[])
         int imgSize = imgServer.total() * imgServer.elemSize();
         s_tmp.head.fin = 1;
         s_tmp.head.seqNumber = index;
-        sprintf(s_tmp.data,"%d",imgSize);
+        sprintf(s_tmp.data, "%d", imgSize);
         int resend = 0;
-        while(1)
+        while (1)
         {
             segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-            if(segment_size > 0)
+            if (segment_size > 0)
             {
-                printf("send	data	#%d\n",index);
+                printf("send	data	#%d\n", index);
                 memset(&s_tmp, 0, sizeof(s_tmp));
-                while(1)
+                while (1)
                 {
                     segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
-                    if(segment_size > 0)
+                    if (segment_size > 0)
                     {
-                        if(s_tmp.head.ackNumber == index)
+                        if (s_tmp.head.ackNumber == index)
                         {
                             printf("get     ack	#%d\n", index);
                             memset(&s_tmp, 0, sizeof(s_tmp));
@@ -169,7 +172,7 @@ int main(int argc, char* argv[])
                         }
                     }
                 }
-                if(resend == 0)
+                if (resend == 0)
                 {
                     break;
                 }
@@ -180,26 +183,26 @@ int main(int argc, char* argv[])
         uchar buffer[imgSize];
 
         // copy a frame to the buffer
-        memcpy(buffer,imgServer.data, imgSize);
+        memcpy(buffer, imgServer.data, imgSize);
 
         int leftSize = imgSize;
         uchar *ptr = buffer;
-        while(leftSize > 0)
+        while (leftSize > 0)
         {
             s_tmp.head.seqNumber = index;
-            memcpy(s_tmp.data,ptr,sizeof(s_tmp.data));
+            memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
             int sentSize = sizeof(s_tmp.data);
             segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-            if(segment_size > 0)
+            if (segment_size > 0)
             {
-                printf("send	data	#%d\n",index);
+                printf("send	data	#%d\n", index);
                 memset(&s_tmp, 0, sizeof(s_tmp));
-                while(1)
+                while (1)
                 {
                     segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
-                    if(segment_size > 0)
+                    if (segment_size > 0)
                     {
-                        if(s_tmp.head.ackNumber == index)
+                        if (s_tmp.head.ackNumber == index)
                         {
                             printf("get     ack	#%d\n", index);
                             memset(&s_tmp, 0, sizeof(s_tmp));
@@ -221,6 +224,6 @@ int main(int argc, char* argv[])
         }
     }
     ////////////////////////////////////////////////////
-	cap.release();
+    cap.release();
     return 0;
 }
