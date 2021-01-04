@@ -229,6 +229,7 @@ int main(int argc, char *argv[])
 
         memcpy(iptr, buffer, 32 * datasize);
         buffer_cnt++;
+
         iptr += 32 * datasize;
         //memcpy(iptr, (const void *)'0', imgSize-sizeof(buffer));
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
@@ -238,6 +239,7 @@ int main(int argc, char *argv[])
         {
             imshow("Video", imgTemp);
             buffer_cnt = 0;
+            iptr = imgTemp.data;
         }
 
         //Press ESC on keyboard to exit
