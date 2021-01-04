@@ -154,6 +154,8 @@ int main(int argc, char *argv[])
 
     int leftSize = imgSize;
     uchar *iptr = imgTemp.data;
+    uchar BUFFER_FRAME[imgSize];
+    uchar *bptr = BUFFER_FRAME;
     while (1)
     {
         // get the size of a frame in bytes
@@ -225,7 +227,7 @@ int main(int argc, char *argv[])
         // copy a fream from buffer to the container on client
         //if (part_frame_cnt == 0)
 
-        memcpy(imgTemp.data, buffer, 32 * datasize);
+        memcpy(iptr, buffer, 32 * datasize);
         buffer_cnt++;
         iptr += 32 * datasize;
         //memcpy(iptr, (const void *)'0', imgSize-sizeof(buffer));
