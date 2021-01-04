@@ -235,6 +235,7 @@ int main(int argc, char *argv[])
         startWindowThread();
         if ((part_frame_cnt) * sizeof(s_tmp) >= imgSize)
         {
+            cout << "play" << endl;
             imshow("Video", imgTemp);
             part_frame_cnt = 0;
         }
