@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
 
         uchar *iptr = imgTemp.data;
         memcpy(iptr, buffer, imgSize);
-        cout << "Temp mat size: " << imgTemp.elemSize() << endl;
+        cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
         startWindowThread();
         if (imgTemp.elemSize() >= imgSize)
