@@ -229,7 +229,7 @@ int main(int argc, char *argv[])
         uchar *iptr = imgTemp.data;
         //cout << "hhhhh" << endl;
         memcpy(iptr, buffer, sizeof(s_tmp) * 31);
-        part_frame_cnt++;
+        part_frame_cnt+=31;
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
         startWindowThread();
