@@ -224,7 +224,8 @@ int main(int argc, char *argv[])
                 }
             }
             //if (leftSize <= 0)
-               // break;
+            // break;
+            cout << "Left: " << leftSize << endl;
         }
     }
     ////////////////////////////////////////////////////
