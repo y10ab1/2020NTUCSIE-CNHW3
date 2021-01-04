@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
                 }
             }
         }
-*/
+        */
         // allocate a buffer to load the frame (there would be 2 buffers in the world of the Internet)
         uchar buffer[imgSize];
 
@@ -223,7 +223,7 @@ int main(int argc, char *argv[])
                     }
                 }
             }
-            if (leftSize <= 0)
+            //if (leftSize <= 0)
                 break;
         }
     }

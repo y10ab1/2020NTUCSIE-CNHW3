@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
                 {
                     printf("recv	data	#%d\n", index);
                     memcpy(ptr, s_tmp.data, sizeof(s_tmp.data));
-                    int recvSize = sizeof(s_tmp.data);
+                    int recvSize = segment_size;//sizeof(s_tmp.data);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                     s_tmp.head.ack = 1;
                     s_tmp.head.ackNumber = index;
@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                 }
-                if (leftSize <= 0)
+                //if (leftSize <= 0)
                     break;
             }
         }
