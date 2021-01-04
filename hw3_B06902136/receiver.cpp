@@ -223,8 +223,9 @@ int main(int argc, char *argv[])
         }
 
         // copy a fream from buffer to the container on client
-        cout << "hhhhh" << endl;
+        
         uchar *iptr = imgTemp.data;
+        cout << "hhhhh" << endl;
         memcpy(iptr, buffer, imgSize);
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
