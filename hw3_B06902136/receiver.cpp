@@ -23,7 +23,7 @@ typedef struct
 typedef struct
 {
     header head;
-    char data[25600*2];
+    char data[25600 * 2];
 } segment;
 
 void setIP(char *dst, char *src)
@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
         // get the frame
         int leftSize = imgSize;
         uchar *ptr = buffer;
-        while (leftSize > 0)
+        while (leftSize > 0)//Buffer 還沒滿的話
         {
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
             if (segment_size > 0)
@@ -185,9 +185,10 @@ int main(int argc, char *argv[])
                     sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
-                    ptr += recvSize;
+
+                    ptr += recvSize; //Buffer offset
                     leftSize -= recvSize;
-                    index++;
+                    index++; //for seqNumber
                 }
                 else
                 {
@@ -204,10 +205,10 @@ int main(int argc, char *argv[])
         }
 
         // copy a fream from buffer to the container on client
-        uchar *iptr = imgClient.data;
+        uchar *iptr = imgTemp.data;
         memcpy(iptr, buffer, imgSize);
         startWindowThread();
-        imshow("Video", imgClient);
+        imshow("Video", imgTemp);
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
         // waitKey means a delay to get the next frame.
