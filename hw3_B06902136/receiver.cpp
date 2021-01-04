@@ -216,8 +216,8 @@ int main(int argc, char *argv[])
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                 }
-                if (leftSize <= sizeof(s_tmp))
-                  break;
+                //if (leftSize <= sizeof(s_tmp))
+                //  break;
                 cout << "Left: " << leftSize << endl;
             }
         }
