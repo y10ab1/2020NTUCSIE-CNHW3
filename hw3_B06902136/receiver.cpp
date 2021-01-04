@@ -200,6 +200,7 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
+                        break;
                         ptr += leftSize;
                         leftSize = 0;
                     }
@@ -223,10 +224,10 @@ int main(int argc, char *argv[])
         }
 
         // copy a fream from buffer to the container on client
-        
+
         uchar *iptr = imgTemp.data;
         //cout << "hhhhh" << endl;
-        memcpy(iptr, buffer, sizeof(buffer));
+        memcpy(iptr, buffer, imgSize);
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
         startWindowThread();
