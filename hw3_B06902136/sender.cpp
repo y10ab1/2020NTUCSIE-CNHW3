@@ -214,7 +214,7 @@ int main(int argc, char *argv[])
                             memset(&s_tmp, 0, sizeof(s_tmp));
                             ptr += sentSize;
                             leftSize -= sentSize;
-                            packet_cnt++
+                            packet_cnt++;
                             index++;
                             break;
                         }
