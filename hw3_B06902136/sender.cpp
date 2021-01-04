@@ -134,12 +134,12 @@ int main(int argc, char *argv[])
         imgServer = imgServer.clone();
     }
     int imgSize = imgServer.total() * imgServer.elemSize();
-    int havesend = 0;
+
     while (1)
     {
         //get a frame from the video to the container on server.
         cap >> imgServer;
-
+        int havesend = 0;
         // get the size of a frame in bytes
 
         s_tmp.head.fin = 0;
@@ -196,41 +196,41 @@ int main(int argc, char *argv[])
             int packet_cnt = 0;
             //while (packet_cnt < 32) //還沒傳滿一個frame的話
             //{
-                s_tmp.head.seqNumber = index;
-                memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
-                int sentSize = sizeof(s_tmp.data);
+            s_tmp.head.seqNumber = index;
+            memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
+            int sentSize = sizeof(s_tmp.data);
 
-                segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-                havesend += sizeof(s_tmp.data);
-                cout << "have sent: " << havesend << endl;
-                if (segment_size > 0) //有送成功的話
+            segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
+            havesend += sizeof(s_tmp.data);
+            cout << "have sent: " << havesend << endl;
+            if (segment_size > 0) //有送成功的話
+            {
+                printf("send	data	#%d\n", index);
+                memset(&s_tmp, 0, sizeof(s_tmp));
+                while (1)
                 {
-                    printf("send	data	#%d\n", index);
-                    memset(&s_tmp, 0, sizeof(s_tmp));
-                    while (1)
+                    segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
+                    if (segment_size > 0)
                     {
-                        segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
-                        if (segment_size > 0)
+                        if (s_tmp.head.ackNumber == index)
                         {
-                            if (s_tmp.head.ackNumber == index)
-                            {
-                                printf("get     ack	#%d\n", index);
-                                memset(&s_tmp, 0, sizeof(s_tmp));
-                                ptr += sentSize;
-                                packet_cnt++;
-                                cout << "pack cnt: " << packet_cnt << endl;
-                                index++;
-                                break;
-                            }
-                            else
-                            {
-                                printf("get     ack	#%d\n", s_tmp.head.ackNumber);
-                                memset(&s_tmp, 0, sizeof(s_tmp));
-                                break;
-                            }
+                            printf("get     ack	#%d\n", index);
+                            memset(&s_tmp, 0, sizeof(s_tmp));
+                            ptr += sentSize;
+                            packet_cnt++;
+                            cout << "pack cnt: " << packet_cnt << endl;
+                            index++;
+                            break;
+                        }
+                        else
+                        {
+                            printf("get     ack	#%d\n", s_tmp.head.ackNumber);
+                            memset(&s_tmp, 0, sizeof(s_tmp));
+                            break;
                         }
                     }
                 }
+            }
             //}
         }
     }
