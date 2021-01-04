@@ -216,10 +216,10 @@ int main(int argc, char *argv[])
 
         uchar *iptr = imgTemp.data;
         memcpy(iptr, buffer, imgSize);
-        cout << "Temp mat size: " << imgTemp.size() << endl;
+        cout << "Temp mat size: " << imgTemp.elemSize() << endl;
 
         startWindowThread();
-        if (imgTemp.size() >= imgSize)
+        if (imgTemp.elemSize() >= imgSize)
             imshow("Video", imgTemp);
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
