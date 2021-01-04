@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
                             printf("get     ack	#%d\n", index);
                             memset(&s_tmp, 0, sizeof(s_tmp));
                             ptr += sentSize;
-                            leftSize -= sentSize;
+                            //leftSize -= sentSize;
                             packet_cnt++;
                             index++;
                             break;
