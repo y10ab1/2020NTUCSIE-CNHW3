@@ -17,6 +17,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <string.h>
+#include <iostream>
 
 typedef struct
 {
@@ -31,7 +32,7 @@ typedef struct
 typedef struct
 {
     header head;
-    char data[25600*2];
+    char data[25600 * 2];
 } segment;
 
 void setIP(char *dst, char *src)
@@ -120,6 +121,8 @@ int main(int argc, char *argv[])
         /*Receive message from receiver and sender*/
         memset(&s_tmp, 0, sizeof(s_tmp));
         segment_size = recvfrom(agentsocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&tmp_addr, &tmp_size);
+        std::cout << "sent size: " << segment_size << std::endl;
+        std::cout << "segm size: " << sizeof(segment) << std::endl;
         if (segment_size > 0)
         {
             inet_ntop(AF_INET, &tmp_addr.sin_addr.s_addr, ipfrom, sizeof(ipfrom));
