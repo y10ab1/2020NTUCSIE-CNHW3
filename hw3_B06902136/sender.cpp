@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
                 int sentSize = sizeof(s_tmp.data);
 
                 segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-                havesend += s_tmp.data;
+                havesend += sizeof(s_tmp.data);
                 cout << "have sent: " << havesend << endl;
                 if (segment_size > 0) //有送成功的話
                 {
