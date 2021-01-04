@@ -149,6 +149,7 @@ int main(int argc, char *argv[])
     }
     int imgSize = imgClient.total() * imgClient.elemSize();
     cout << "imgSize: " << imgSize << endl;
+    int part_frame_cnt = 0;
     while (1)
     {
         // get the size of a frame in bytes
@@ -173,7 +174,7 @@ int main(int argc, char *argv[])
         }*/
 
         // allocate a buffer to load the frame (there would be 2 buffers in the world of the Internet)
-        uchar buffer[sizeof(s_tmp) * 32];
+        uchar buffer[imgSize];
         // get the frame
         int leftSize = imgSize;
         uchar *ptr = buffer;
@@ -227,12 +228,17 @@ int main(int argc, char *argv[])
 
         uchar *iptr = imgTemp.data;
         //cout << "hhhhh" << endl;
-        memcpy(iptr, buffer, sizeof(s_tmp) * (index % 32));
+        memcpy(iptr, buffer, sizeof(s_tmp) * 31);
+        part_frame_cnt++;
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
         startWindowThread();
-        if (imgTemp.elemSize() >= imgSize)
+        if ((part_frame_cnt) * sizeof(s_tmp) >= imgSize)
+        {
             imshow("Video", imgTemp);
+            part_frame_cnt = 0;
+        }
+
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
         // waitKey means a delay to get the next frame.
