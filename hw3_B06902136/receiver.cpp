@@ -209,7 +209,7 @@ int main(int argc, char *argv[])
                     memset(&s_tmp, 0, sizeof(s_tmp));
                 }
                 //if (leftSize <= 0)
-                    break;
+                 //   break;
             }
         }
 
