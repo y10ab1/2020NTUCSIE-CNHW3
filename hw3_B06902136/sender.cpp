@@ -159,15 +159,25 @@ int main(int argc, char *argv[])
 
         int packet_cnt = 0;
         int buffer_cnt = 0;
-        while (havesend + 32 * datasize <= imgSize)
+        while (havesend < imgSize)
         {
-            for (int i = 0; i < WinSize && havesend + 32 * datasize <= imgSize; i++)
+            for (int i = 0; i < WinSize && havesend < imgSize; i++)
             {
 
                 s_tmp.head.seqNumber = index;
-                memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
+                if (havesend + datasize <= imgSize)
+                {
+                    memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
+                    havesend += sizeof(s_tmp.data);
+                }
+                else
+                {
+                    memcpy(s_tmp.data, ptr, imgSize - havesend);
+                    havesend = imgSize
+                }
+
                 segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-                havesend += sizeof(s_tmp.data);
+
                 cout << "have sent: " << havesend << endl;
                 if (segment_size > 0) //有送成功的話
                 {
