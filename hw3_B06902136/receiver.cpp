@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
         // get the frame
         int leftSize = imgSize;
         uchar *ptr = buffer;
-        while (leftSize > 0)//Buffer 還沒滿的話
+        while (leftSize > 0) //Buffer 還沒滿的話
         {
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
             if (segment_size > 0)
@@ -213,8 +213,10 @@ int main(int argc, char *argv[])
         }
 
         // copy a fream from buffer to the container on client
-        uchar *iptr = imgTemp.data;
-        memcpy(iptr, buffer, imgSize);
+
+        //uchar *iptr = imgTemp.data;
+        //memcpy(iptr, buffer, imgSize);
+        imgTemp = TransBufferToMat(Buffer, w, h, 3);
         startWindowThread();
         imshow("Video", imgTemp);
         //Press ESC on keyboard to exit
