@@ -6,7 +6,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include "opencv2/opencv.hpp"
-#define datasize 81920
+#define datasize 40960
 
 using namespace cv;
 using namespace std;
@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
                 {
                     printf("recv	data	#%d\n", index);
                     memcpy(ptr, s_tmp.data, sizeof(s_tmp.data));
-                    int recvSize = segment_size; //sizeof(s_tmp.data);
+                    int recvSize = sizeof(s_tmp.data);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                     s_tmp.head.ack = 1;
                     s_tmp.head.ackNumber = index;
@@ -200,6 +200,7 @@ int main(int argc, char *argv[])
                     {
                         ptr += recvSize; //Buffer offset
                         leftSize -= recvSize;
+                        
                     }
                     else
                     {

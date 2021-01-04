@@ -6,7 +6,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include "opencv2/opencv.hpp"
-#define datasize 81920
+#define datasize 40960
 
 using namespace cv;
 using namespace std;

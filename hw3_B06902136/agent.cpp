@@ -18,7 +18,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <iostream>
-#define datasize 81920
+#define datasize 40960
 
 typedef struct
 {
