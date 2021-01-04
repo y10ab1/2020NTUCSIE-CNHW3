@@ -24,7 +24,7 @@ typedef struct
 typedef struct
 {
     header head;
-    uchar data[datasize];
+    char data[datasize];
 } segment;
 
 void setIP(char *dst, char *src)
@@ -190,7 +190,8 @@ int main(int argc, char *argv[])
 
         int leftSize = imgSize;
         uchar *ptr = buffer;
-        while (leftSize > 0) //還沒傳滿一個frame的話
+        int packet_cnt = 0;
+        while (packet_cnt < 32) //還沒傳滿一個frame的話
         {
             s_tmp.head.seqNumber = index;
             memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
@@ -213,6 +214,7 @@ int main(int argc, char *argv[])
                             memset(&s_tmp, 0, sizeof(s_tmp));
                             ptr += sentSize;
                             leftSize -= sentSize;
+                            packet_cnt++
                             index++;
                             break;
                         }

@@ -33,7 +33,7 @@ typedef struct
 typedef struct
 {
     header head;
-    uchar data[datasize];
+    char data[datasize];
 } segment;
 
 void setIP(char *dst, char *src)
