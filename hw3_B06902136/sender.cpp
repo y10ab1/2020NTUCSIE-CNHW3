@@ -134,6 +134,7 @@ int main(int argc, char *argv[])
         imgServer = imgServer.clone();
     }
     int imgSize = imgServer.total() * imgServer.elemSize();
+    int havesend = 0;
     while (1)
     {
         //get a frame from the video to the container on server.
@@ -199,6 +200,8 @@ int main(int argc, char *argv[])
                 int sentSize = sizeof(s_tmp.data);
 
                 segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
+                havesend += s_tmp.data;
+                cout << "have sent: " << havesend << endl;
                 if (segment_size > 0) //有送成功的話
                 {
                     printf("send	data	#%d\n", index);
