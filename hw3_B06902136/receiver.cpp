@@ -207,6 +207,7 @@ int main(int argc, char *argv[])
                     else
                     {
                         packet_cnt = 0;
+                        index++;
                         break;
                         ptr += leftSize;
                         leftSize = 0;
