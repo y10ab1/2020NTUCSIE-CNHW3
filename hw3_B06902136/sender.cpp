@@ -132,17 +132,17 @@ int main(int argc, char *argv[])
     {
         imgServer = imgServer.clone();
     }
-
+    int imgSize = imgServer.total() * imgServer.elemSize();
     while (1)
     {
         //get a frame from the video to the container on server.
         cap >> imgServer;
 
         // get the size of a frame in bytes
-        int imgSize = imgServer.total() * imgServer.elemSize();
+
         s_tmp.head.fin = 1;
         s_tmp.head.seqNumber = index;
-        sprintf(s_tmp.data, "%d", imgSize);
+        //sprintf(s_tmp.data, "%d", imgSize);
         int resend = 0;
         while (1)
         {
