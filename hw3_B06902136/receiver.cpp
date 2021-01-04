@@ -225,10 +225,10 @@ int main(int argc, char *argv[])
         // copy a fream from buffer to the container on client
         //if (part_frame_cnt == 0)
 
-        //iptr = imgTemp.data;
+        iptr = imgTemp.data;
         memcpy(iptr, buffer, sizeof(buffer));
         //part_frame_cnt += 31;
-        iptr += imgSize;
+        iptr += imgSize-sizeof(buffer);
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
         startWindowThread();
