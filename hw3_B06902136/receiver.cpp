@@ -177,10 +177,11 @@ int main(int argc, char *argv[])
         }*/
 
         // allocate a buffer to load the frame (there would be 2 buffers in the world of the Internet)
-        uchar buffer[imgSize];
+        uchar buffer[32 * datasize];
         // get the frame
         leftSize = imgSize;
         uchar *ptr = buffer;
+        int packet_cnt = 0;
         while (leftSize > 0) //Buffer 還沒滿的話
         {
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
@@ -197,11 +198,10 @@ int main(int argc, char *argv[])
                     sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
-                    if (leftSize - recvSize >= 0)
+                    if (packet_cnt++ <= 32)
                     {
                         ptr += recvSize; //Buffer offset
                         leftSize -= recvSize;
-                        
                     }
                     else
                     {
@@ -229,21 +229,21 @@ int main(int argc, char *argv[])
         }
 
         // copy a fream from buffer to the container on client
-        if (part_frame_cnt == 0)
-            iptr = imgTemp.data;
-        
-        memcpy(iptr, buffer, imgSize-leftSize);
+        //if (part_frame_cnt == 0)
+        iptr = imgTemp.data;
+
+        memcpy(iptr, buffer, datasize);
         part_frame_cnt += 31;
-        iptr += imgSize-leftSize;
+        //iptr += datasize;
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
         startWindowThread();
-        if (imgSize-leftSize>=sizeof(s_tmp.data))
-        {
-            cout << "play" << endl;
-            imshow("Video", imgTemp);
-            part_frame_cnt = 0;
-        }
+        //if (imgSize - leftSize >= sizeof(s_tmp.data))
+        //{
+        //cout << "play" << endl;
+        imshow("Video", imgTemp);
+        part_frame_cnt = 0;
+        //}
 
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
