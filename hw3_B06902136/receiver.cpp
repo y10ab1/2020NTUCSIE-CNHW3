@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
         // copy a fream from buffer to the container on client
 
         memcpy(iptr, buffer, 32 * datasize);
-        memcpy(iptr + 48 * datasize, buffer, 32 * datasize);
+        memcpy(iptr + imgSize / 4, buffer, 32 * datasize);
         buffer_cnt++;
 
         //iptr += 32 * datasize;
