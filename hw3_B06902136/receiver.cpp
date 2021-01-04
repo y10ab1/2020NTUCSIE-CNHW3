@@ -23,7 +23,7 @@ typedef struct
 typedef struct
 {
     header head;
-    char data[25600 * 4];
+    char data[25600 * 2];
 } segment;
 
 void setIP(char *dst, char *src)
@@ -177,8 +177,8 @@ int main(int argc, char *argv[])
         // get the frame
         int leftSize = imgSize;
         uchar *ptr = buffer;
-        while (leftSize > 0) //Buffer 還沒滿的話
-        {
+        //while (leftSize > 0) //Buffer 還沒滿的話
+        //{
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
             if (segment_size > 0)
             {
@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
                 }
                 break;
             }
-        }
+        //}
 
         // copy a fream from buffer to the container on client
 
