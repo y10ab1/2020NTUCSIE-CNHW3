@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
         int packet_cnt = 0;
         while (havesend <= imgSize)
         {
-            for (int i = 0; i < WinSize; i++)
+            for (int i = 0; i < WinSize && havesend <= imgSize; i++)
             {
 
                 s_tmp.head.seqNumber = index;
@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
                 cout << "have sent: " << havesend << endl;
                 if (segment_size > 0) //有送成功的話
                 {
-                    printf("send	data	#%d\n", index);
+                    printf("send	data	#%d,    winSize = %d\n", index, WinSize);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                     while (1)
                     {
