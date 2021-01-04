@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
         s_tmp.head.fin = 1;
         s_tmp.head.seqNumber = index;
         //sprintf(s_tmp.data, "%d", imgSize);
-        int resend = 0;
+        int resend = 0;/*
         while (1)
         {
             segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
                 }
             }
         }
-
+*/
         // allocate a buffer to load the frame (there would be 2 buffers in the world of the Internet)
         uchar buffer[imgSize];
 
