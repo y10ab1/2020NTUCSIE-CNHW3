@@ -177,8 +177,8 @@ int main(int argc, char *argv[])
         // get the frame
         int leftSize = imgSize;
         uchar *ptr = buffer;
-        //while (leftSize > 0) //Buffer 還沒滿的話
-        //{
+        while (leftSize > 0) //Buffer 還沒滿的話
+        {
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
             if (segment_size > 0)
             {
@@ -208,9 +208,10 @@ int main(int argc, char *argv[])
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                 }
-                //break;
+                if (leftSize <= 0)
+                    break;
             }
-        //}
+        }
 
         // copy a fream from buffer to the container on client
 

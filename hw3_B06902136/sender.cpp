@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
         s_tmp.head.fin = 1;
         s_tmp.head.seqNumber = index;
         //sprintf(s_tmp.data, "%d", imgSize);
-        int resend = 0;/*
+        int resend = 0; /*
         while (1)
         {
             segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
 
         int leftSize = imgSize;
         uchar *ptr = buffer;
-        while (leftSize > 0)//還沒傳滿一個frame的話
+        while (leftSize > 0) //還沒傳滿一個frame的話
         {
             s_tmp.head.seqNumber = index;
             memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
             cout << "sent size: " << sentSize << endl;
             cout << "segm size: " << sizeof(segment) << endl;
             segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-            if (segment_size > 0)//有送成功的話
+            if (segment_size > 0) //有送成功的話
             {
                 printf("send	data	#%d\n", index);
                 memset(&s_tmp, 0, sizeof(s_tmp));
@@ -223,7 +223,8 @@ int main(int argc, char *argv[])
                     }
                 }
             }
-            break;
+            if (leftSize <= 0)
+                break;
         }
     }
     ////////////////////////////////////////////////////
