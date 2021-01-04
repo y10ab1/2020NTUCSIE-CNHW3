@@ -202,15 +202,19 @@ int main(int argc, char *argv[])
 
         // copy a fream from buffer to the container on client
 
-        if (buffer_cnt + 32 * datasize <= imgSize)
+        if (buffer_cnt + datasize <= imgSize)
         {
-            memcpy(iptr + buffer_cnt, buffer, 32 * datasize); //Buffer 滿了就把他丟到frame裡面
+            for (int i = 0; i < 32; i++)
+            {
+                memcpy(iptr + i * datasize, buffer + i * datasize, datasize); //Buffer 滿了就把他丟到frame裡面
+            }
+
             buffer_cnt += 32 * datasize;
             cout << "recv date : " << buffer_cnt << endl;
         }
         else
         {
-            //memcpy(iptr + buffer_cnt, buffer, imgSize - buffer_cnt); //Buffer 滿了就把他丟到frame裡面
+            memcpy(iptr + buffer_cnt, buffer, imgSize - buffer_cnt); //Buffer 滿了就把他丟到frame裡面
             buffer_cnt = imgSize;
             cout << "recv date : " << buffer_cnt << endl;
         }
