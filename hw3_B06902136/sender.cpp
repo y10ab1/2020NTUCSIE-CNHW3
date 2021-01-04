@@ -22,7 +22,7 @@ typedef struct
 typedef struct
 {
     header head;
-    char data[1555200];
+    char data[256000];
 } segment;
 
 void setIP(char *dst, char *src)
