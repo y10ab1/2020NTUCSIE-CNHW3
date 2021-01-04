@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
     int imgSize = imgClient.total() * imgClient.elemSize();
     cout << "imgSize: " << imgSize << endl;
     int part_frame_cnt = 0;
-    
+
     int leftSize = imgSize;
     while (1)
     {
@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
         leftSize = imgSize;
         uchar *ptr = buffer;
         int packet_cnt = 0;
-        while (leftSize > 0) //Buffer 還沒滿的話
+        while (packet_cnt < 32) //Buffer 還沒滿的話
         {
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
             if (segment_size > 0)
@@ -199,17 +199,9 @@ int main(int argc, char *argv[])
                     sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
-                    if (packet_cnt++ < 31)
-                    {
-                        ptr += recvSize; //Buffer offset
-                        leftSize -= recvSize;
-                    }
-                    else
-                    {
-                        packet_cnt = 0;
-                        index++;
-                        break;
-                    }
+                    
+                    packet_cnt++;
+                    ptr += recvSize; //Buffer offset
 
                     index++; //for seqNumber
                 }
