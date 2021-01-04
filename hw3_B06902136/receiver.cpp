@@ -23,7 +23,7 @@ typedef struct
 typedef struct
 {
     header head;
-    char data[25600 * 2];
+    char data[4096];
 } segment;
 
 void setIP(char *dst, char *src)
@@ -217,8 +217,8 @@ int main(int argc, char *argv[])
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                 }
-                //if (leftSize <= sizeof(s_tmp))
-                  //break;
+                if (leftSize <= sizeof(s_tmp))
+                  break;
                 cout << "Left: " << leftSize << endl;
             }
         }
