@@ -205,6 +205,7 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
+                        packet_cnt = 0;
                         break;
                         ptr += leftSize;
                         leftSize = 0;
@@ -222,7 +223,7 @@ int main(int argc, char *argv[])
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                 }
-                if (leftSize <= sizeof(s_tmp))
+                if (leftSize <= sizeof(s_tmp.data))
                     break;
                 cout << "Left: " << leftSize << endl;
             }
@@ -232,8 +233,8 @@ int main(int argc, char *argv[])
         //if (part_frame_cnt == 0)
         iptr = imgTemp.data;
 
-        memcpy(iptr, buffer, datasize);
-        part_frame_cnt += 31;
+        memcpy(iptr, buffer, sizeof(s_tmp.data));
+        //part_frame_cnt += 31;
         //iptr += datasize;
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
@@ -242,7 +243,7 @@ int main(int argc, char *argv[])
         //{
         //cout << "play" << endl;
         imshow("Video", imgTemp);
-        part_frame_cnt = 0;
+        //part_frame_cnt = 0;
         //}
 
         //Press ESC on keyboard to exit
