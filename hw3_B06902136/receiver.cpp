@@ -234,11 +234,11 @@ int main(int argc, char *argv[])
         
         memcpy(iptr, buffer, imgSize-leftSize);
         part_frame_cnt += 31;
-        iptr += sizeof(s_tmp) * 31;
+        iptr += imgSize-leftSize;
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
         startWindowThread();
-        if ((part_frame_cnt) * sizeof(s_tmp) >= imgSize)
+        if (imgSize-leftSize>=sizeof(s_tmp.data))
         {
             cout << "play" << endl;
             imshow("Video", imgTemp);
