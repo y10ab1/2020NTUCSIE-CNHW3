@@ -225,14 +225,12 @@ int main(int argc, char *argv[])
         }
 
         // copy a fream from buffer to the container on client
-
-        memcpy(iptr, buffer, 32 * datasize);
-        memcpy(iptr + 32 * datasize, buffer, 32 * datasize);
-        memcpy(iptr + 32 * datasize * 2, buffer, 32 * datasize);
-        memcpy(iptr + 32 * datasize * 3, buffer, 32 * datasize);
-        memcpy(iptr + 32 * datasize * 4, buffer, 32 * datasize);
-        memcpy(iptr + 32 * datasize * 5, buffer, 32 * datasize);
-        memcpy(iptr + 32 * datasize * 6, buffer, 32 * datasize);
+        Mat TTT;
+        if (!TTT.isContinuous())
+        {
+            TTT = TTT.clone();
+        }
+        memcpy(TTT.data, buffer, 32 * datasize);
         buffer_cnt++;
 
         //iptr += 32 * datasize;
@@ -242,7 +240,7 @@ int main(int argc, char *argv[])
         startWindowThread();
         //if (buffer_cnt * 32 * datasize >= imgSize)
         //{
-        imshow("Video", imgTemp);
+        imshow("Video", TTT);
         buffer_cnt = 0;
         //iptr = imgTemp.data;
         //}
