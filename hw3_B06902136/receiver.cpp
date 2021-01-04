@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
     int part_frame_cnt = 0;
 
     int leftSize = imgSize;
-    
+    uchar *iptr=imgTemp.data;
     while (1)
     {
         // get the size of a frame in bytes
@@ -225,10 +225,10 @@ int main(int argc, char *argv[])
         // copy a fream from buffer to the container on client
         //if (part_frame_cnt == 0)
 
-        uchar *iptr=imgTemp.data;
-        memcpy(imgTemp.data, buffer, 32*datasize);
+        
+        memcpy(iptr, buffer, 32*datasize);
         //part_frame_cnt += 31;
-        //iptr += imgSize-sizeof(buffer);
+        iptr += imgSize-32*datasize;
         //memcpy(iptr, (const void *)'0', imgSize-sizeof(buffer));
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
