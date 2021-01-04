@@ -191,6 +191,7 @@ int main(int argc, char *argv[])
                 {
                     printf("recv	data	#%d\n", index);
                     memcpy(ptr, s_tmp.data, sizeof(s_tmp.data));
+                    cout << "OK " << endl;
                     int recvSize = sizeof(s_tmp.data);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                     s_tmp.head.ack = 1;
@@ -224,7 +225,7 @@ int main(int argc, char *argv[])
                     memset(&s_tmp, 0, sizeof(s_tmp));
                 }
                 //if (leftSize <= sizeof(s_tmp.data))
-                  //  break;
+                //  break;
                 cout << "Left: " << leftSize << endl;
             }
         }
