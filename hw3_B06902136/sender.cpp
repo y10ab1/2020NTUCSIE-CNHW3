@@ -159,9 +159,9 @@ int main(int argc, char *argv[])
 
         int packet_cnt = 0;
         int buffer_cnt = 0;
-        while (havesend <= imgSize)
+        while (havesend < imgSize)
         {
-            for (int i = 0; i < WinSize && havesend <= imgSize; i++)
+            for (int i = 0; i < WinSize && havesend < imgSize; i++)
             {
 
                 s_tmp.head.seqNumber = index;
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    memcpy(s_tmp.data, ptr, imgSize - havesend);
+                    memcpy(s_tmp.data, ptr, sizeof(s_tmp.data)/*imgSize - havesend*/);
                     havesend = imgSize;
                 }
 
