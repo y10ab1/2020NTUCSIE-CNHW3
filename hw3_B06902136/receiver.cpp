@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
     int imgSize = imgClient.total() * imgClient.elemSize();
     cout << "imgSize: " << imgSize << endl;
     int part_frame_cnt = 0;
-    uchar *iptr;
+    
     int leftSize = imgSize;
     while (1)
     {
@@ -209,8 +209,6 @@ int main(int argc, char *argv[])
                         packet_cnt = 0;
                         index++;
                         break;
-                        ptr += leftSize;
-                        leftSize = 0;
                     }
 
                     index++; //for seqNumber
@@ -233,7 +231,7 @@ int main(int argc, char *argv[])
 
         // copy a fream from buffer to the container on client
         //if (part_frame_cnt == 0)
-        iptr = imgTemp.data;
+        uchar *iptr = imgTemp.data;
 
         memcpy(iptr, buffer, sizeof(buffer));
         //part_frame_cnt += 31;
