@@ -59,10 +59,10 @@ cv::Mat TransBufferToMat(unsigned char *pBuffer, int nWidth, int nHeight, int nB
 int main(int argc, char *argv[])
 {
     int receiversocket, portNum, nBytes;
-    char videoname[1000];
+    //char videoname[1000];
     segment s_tmp;
-    struct sockaddr_in agent, receiver, tmp_addr;
-    socklen_t agent_size, recv_size, tmp_size;
+    struct sockaddr_in agent, receiver;
+    socklen_t agent_size, recv_size;
     char ip[2][50];
     int port[2], i;
 

@@ -42,8 +42,8 @@ int main(int argc, char *argv[])
     int sendersocket, portNum, nBytes;
     char videoname[1000];
     segment s_tmp;
-    struct sockaddr_in sender, agent, tmp_addr;
-    socklen_t sender_size, agent_size, tmp_size;
+    struct sockaddr_in sender, agent;
+    socklen_t sender_size, agent_size;
     char ip[2][50];
     int port[2], i;
 
