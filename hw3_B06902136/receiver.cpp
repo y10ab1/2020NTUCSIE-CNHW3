@@ -225,10 +225,9 @@ int main(int argc, char *argv[])
         }
 
         // copy a fream from buffer to the container on client
-       
 
         memcpy(iptr, buffer, 32 * datasize);
-        memcpy(imgTemp.data, buffer, 32 * datasize);
+        memcpy(iptr + 32 * datasize, buffer, 32 * datasize);
         buffer_cnt++;
 
         //iptr += 32 * datasize;
@@ -238,9 +237,9 @@ int main(int argc, char *argv[])
         startWindowThread();
         //if (buffer_cnt * 32 * datasize >= imgSize)
         //{
-            imshow("Video", imgTemp);
-            buffer_cnt = 0;
-            //iptr = imgTemp.data;
+        imshow("Video", imgTemp);
+        buffer_cnt = 0;
+        //iptr = imgTemp.data;
         //}
 
         //Press ESC on keyboard to exit
