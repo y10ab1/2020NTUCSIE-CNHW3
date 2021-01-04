@@ -22,7 +22,7 @@ typedef struct
 typedef struct
 {
     header head;
-    char data[25600*2];
+    char data[25600 * 2];
 } segment;
 
 void setIP(char *dst, char *src)
@@ -192,6 +192,7 @@ int main(int argc, char *argv[])
             s_tmp.head.seqNumber = index;
             memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
             int sentSize = sizeof(s_tmp.data);
+            cout << "sent size: " << sentSize << endl;
             segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
             if (segment_size > 0)
             {
