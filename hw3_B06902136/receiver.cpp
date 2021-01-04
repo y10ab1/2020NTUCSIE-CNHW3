@@ -214,11 +214,13 @@ int main(int argc, char *argv[])
 
         // copy a fream from buffer to the container on client
 
-        //uchar *iptr = imgTemp.data;
-        //memcpy(iptr, buffer, imgSize);
-        imgTemp = TransBufferToMat(buffer, 960, 540, 3);
+        uchar *iptr = imgTemp.data;
+        memcpy(iptr, buffer, imgSize);
+        cout << "Temp mat size: " << imgTemp.size() << endl;
+
         startWindowThread();
-        imshow("Video", imgTemp);
+        if (imgTemp.size() >= imgSize)
+            imshow("Video", imgTemp);
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
         // waitKey means a delay to get the next frame.
