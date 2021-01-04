@@ -185,6 +185,7 @@ int main(int argc, char *argv[])
         */
         // allocate a buffer to load the frame (there would be 2 buffers in the world of the Internet)
         uchar buffer[imgSize];
+        cout << "imgSize: " << imgSize << endl;
 
         // copy a frame to the buffer
         memcpy(buffer, imgServer.data, imgSize);
