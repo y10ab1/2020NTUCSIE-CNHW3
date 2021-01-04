@@ -139,6 +139,14 @@ int main(int argc, char *argv[])
     {
         imgClient = imgClient.clone();
     }
+
+    //allocate container to load Temp frames
+    imgTemp = Mat::zeros(height, width, CV_8UC3);
+    // ensure the memory is continuous (for efficiency issue.)
+    if (!imgTemp.isContinuous())
+    {
+        imgTemp = imgTemp.clone();
+    }
     int imgSize = imgClient.total() * imgClient.elemSize();
     cout << "imgSize: " << imgSize << endl;
     while (1)
