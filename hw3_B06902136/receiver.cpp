@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
         //if (part_frame_cnt == 0)
         iptr = imgTemp.data;
 
-        memcpy(iptr, buffer, sizeof(s_tmp.data));
+        memcpy(iptr, buffer, sizeof(buffer));
         //part_frame_cnt += 31;
         //iptr += datasize;
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
