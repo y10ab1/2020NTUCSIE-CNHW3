@@ -60,7 +60,6 @@ cv::Mat TransBufferToMat(unsigned char *pBuffer, int nWidth, int nHeight, int nB
 int main(int argc, char *argv[])
 {
     int receiversocket, portNum, nBytes;
-    //char videoname[1000];
     segment s_tmp;
     struct sockaddr_in agent, receiver;
     socklen_t agent_size, recv_size;
@@ -128,8 +127,7 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    //char *w = strtok(resolution," ");
-    //char *h = strtok(NULL," ");
+
     int width = atoi(strtok(resolution, " "));
     int height = atoi(strtok(NULL, " "));
 
@@ -148,6 +146,7 @@ int main(int argc, char *argv[])
     {
         imgTemp = imgTemp.clone();
     }
+    // get the size of a frame in bytes
     int imgSize = imgClient.total() * imgClient.elemSize();
     cout << "imgSize: " << imgSize << endl;
     int buffer_cnt = 0;
@@ -158,26 +157,6 @@ int main(int argc, char *argv[])
     uchar *bptr = BUFFER_FRAME;
     while (1)
     {
-        // get the size of a frame in bytes
-        /*
-        while (1)
-        {
-            segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
-            if (segment_size > 0)
-            {
-                printf("recv	data	#%d\n", index);
-                cout << "recv size: " << segment_size << endl;
-                imgSize = atoi(s_tmp.data);
-                memset(&s_tmp, 0, sizeof(s_tmp));
-                s_tmp.head.ack = 1;
-                s_tmp.head.ackNumber = index;
-                sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
-                printf("send     ack	#%d\n", index);
-                memset(&s_tmp, 0, sizeof(s_tmp));
-                index++;
-                break;
-            }
-        }*/
 
         // allocate a buffer to load the frame (there would be 2 buffers in the world of the Internet)
         uchar buffer[32 * datasize];
@@ -188,9 +167,9 @@ int main(int argc, char *argv[])
         while (packet_cnt < 32) //Buffer 還沒滿的話
         {
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
-            if (segment_size > 0)
+            if (segment_size > 0) //有收到東西
             {
-                if (s_tmp.head.seqNumber == index)
+                if (s_tmp.head.seqNumber == index) //SeqNumber有對
                 {
                     printf("recv	data	#%d\n", index);
                     memcpy(ptr, s_tmp.data, sizeof(s_tmp.data)); //把收到的data複製到buffer裡面
@@ -218,30 +197,27 @@ int main(int argc, char *argv[])
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                 }
-                //if (leftSize <= sizeof(s_tmp.data))
-                //  break;
-                //cout << "Left: " << leftSize << endl;
             }
         }
 
         // copy a fream from buffer to the container on client
 
-        memcpy(iptr, buffer, 32 * datasize);
-        //iptr += 32 * datasize;
+        memcpy(iptr, buffer, 32 * datasize); //Buffer 滿了就把他丟到frame裡面
+        iptr += 32 * datasize;
         //memcpy(iptr + imgSize / 4, buffer, 32 * datasize);
-        buffer_cnt++;
+        buffer_cnt += 32 * datasize;
 
         //iptr += 32 * datasize;
-        //memcpy(iptr, (const void *)'0', imgSize-sizeof(buffer));
+
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
         startWindowThread();
-        //if (buffer_cnt * 32 * datasize >= imgSize)
-        //{
-        imshow("Video", imgTemp);
-        buffer_cnt = 0;
-        //iptr = imgTemp.data;
-        //}
+        if (buffer_cnt + 32 * datasize >= imgSize)
+        {
+            imshow("Video", imgTemp);
+            buffer_cnt = 0;
+            iptr = imgTemp.data;
+        }
 
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.

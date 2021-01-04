@@ -148,43 +148,7 @@ int main(int argc, char *argv[])
         s_tmp.head.seqNumber = index;
         //sprintf(s_tmp.data, "%d", imgSize);
         int resend = 0;
-        /*
-        while (1)
-        {
-            segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-            if (segment_size > 0)
-            {
-                printf("send	data	#%d\n", index);
-                memset(&s_tmp, 0, sizeof(s_tmp));
-                while (1)
-                {
-                    segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
-                    if (segment_size > 0)
-                    {
-                        if (s_tmp.head.ackNumber == index)
-                        {
-                            printf("get     ack	#%d\n", index);
-                            memset(&s_tmp, 0, sizeof(s_tmp));
-                            index++;
-                            resend = 0;
-                            break;
-                        }
-                        else
-                        {
-                            printf("get     ack	#%d\n", s_tmp.head.ackNumber);
-                            memset(&s_tmp, 0, sizeof(s_tmp));
-                            resend = 1;
-                            break;
-                        }
-                    }
-                }
-                if (resend == 0)
-                {
-                    break;
-                }
-            }
-        }
-        */
+
         // allocate a buffer to load the frame (there would be 2 buffers in the world of the Internet)
         uchar buffer[imgSize];
         cout << "imgSize: " << imgSize << endl;
