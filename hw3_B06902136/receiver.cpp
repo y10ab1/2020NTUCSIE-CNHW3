@@ -203,11 +203,9 @@ int main(int argc, char *argv[])
         // copy a fream from buffer to the container on client
 
         memcpy(iptr, buffer, 32 * datasize); //Buffer 滿了就把他丟到frame裡面
-        iptr += 32 * datasize;
+        iptr += imgSize / 4;
         //memcpy(iptr + imgSize / 4, buffer, 32 * datasize);
         buffer_cnt += 32 * datasize;
-
-        //iptr += 32 * datasize;
 
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
@@ -222,7 +220,7 @@ int main(int argc, char *argv[])
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
         // waitKey means a delay to get the next frame.
-        char c = (char)waitKey(33.3333);
+        char c = (char)waitKey(13.3333);
         if (c == 27)
         {
             break;
