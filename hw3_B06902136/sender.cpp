@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
         uchar *ptr = buffer;
         //for (int buffer_cnt = 0; havesend <= imgSize; buffer_cnt++)
         //{
-        cout << "buf cnt: " << buffer_cnt << endl;
+        //cout << "buf cnt: " << buffer_cnt << endl;
         int packet_cnt = 0;
         while (packet_cnt < 32) //還沒傳滿一個frame的話
         {
