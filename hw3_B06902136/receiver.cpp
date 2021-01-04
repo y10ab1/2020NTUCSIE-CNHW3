@@ -198,7 +198,7 @@ int main(int argc, char *argv[])
                     sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
-                    if (packet_cnt++ <= 32)
+                    if (packet_cnt++ < 32)
                     {
                         ptr += recvSize; //Buffer offset
                         leftSize -= recvSize;
