@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
         //if (part_frame_cnt == 0)
 
         uchar *iptr=imgTemp.data;
-        memcpy(iptr, buffer, 32*datasize);
+        memcpy(imgTemp.data, buffer, 32*datasize);
         //part_frame_cnt += 31;
         //iptr += imgSize-sizeof(buffer);
         //memcpy(iptr, (const void *)'0', imgSize-sizeof(buffer));
