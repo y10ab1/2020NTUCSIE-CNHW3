@@ -158,15 +158,13 @@ int main(int argc, char *argv[])
         uchar *ptr = buffer;
 
         int packet_cnt = 0;
-
-        for (int i = 0; i < WinSize; i++)
+        while (havesend <= imgSize)
         {
-            while (packet_cnt < 32) //還沒傳滿一個frame的話
+            for (int i = 0; i < WinSize; i++)
             {
+
                 s_tmp.head.seqNumber = index;
                 memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
-                int sentSize = sizeof(s_tmp.data);
-
                 segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 havesend += sizeof(s_tmp.data);
                 cout << "have sent: " << havesend << endl;
@@ -183,7 +181,7 @@ int main(int argc, char *argv[])
                             {
                                 printf("get     ack	#%d\n", index);
                                 memset(&s_tmp, 0, sizeof(s_tmp));
-                                ptr += sentSize;
+                                ptr += sizeof(s_tmp.data);
                                 packet_cnt++;
                                 cout << "pack cnt: " << packet_cnt << endl;
                                 index++;
@@ -198,6 +196,14 @@ int main(int argc, char *argv[])
                         }
                     }
                 }
+            }
+            if (WinSize < Threshold)
+            {
+                WinSize *= 2;
+            }
+            else if (WinSize >= Threshold)
+            {
+                WinSize += 1;
             }
         }
     }
