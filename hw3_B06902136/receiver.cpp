@@ -191,8 +191,8 @@ int main(int argc, char *argv[])
                 if (s_tmp.head.seqNumber == index)
                 {
                     printf("recv	data	#%d\n", index);
-                    memcpy(ptr, s_tmp.data, sizeof(s_tmp.data));
-                    cout << "OK " << endl;
+                    memcpy(ptr, s_tmp.data, sizeof(s_tmp.data)); //把收到的data複製到buffer裡面
+                    //cout << "OK " << endl;
                     int recvSize = sizeof(s_tmp.data);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                     s_tmp.head.ack = 1;
@@ -218,7 +218,7 @@ int main(int argc, char *argv[])
                 }
                 //if (leftSize <= sizeof(s_tmp.data))
                 //  break;
-                cout << "Left: " << leftSize << endl;
+                //cout << "Left: " << leftSize << endl;
             }
         }
 
@@ -232,13 +232,12 @@ int main(int argc, char *argv[])
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
         startWindowThread();
-        if (buffer_cnt * datasize >= imgSize)
+        if (buffer_cnt * 32 * datasize >= imgSize)
         {
             imshow("Video", imgTemp);
             buffer_cnt = 0;
         }
 
-        
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
         // waitKey means a delay to get the next frame.
