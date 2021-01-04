@@ -194,8 +194,8 @@ int main(int argc, char *argv[])
         {
             cout << "buf cnt: " << buffer_cnt << endl;
             int packet_cnt = 0;
-            while (packet_cnt < 32) //還沒傳滿一個frame的話
-            {
+            //while (packet_cnt < 32) //還沒傳滿一個frame的話
+            //{
                 s_tmp.head.seqNumber = index;
                 memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
                 int sentSize = sizeof(s_tmp.data);
@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
                         }
                     }
                 }
-            }
+            //}
         }
     }
     ////////////////////////////////////////////////////
