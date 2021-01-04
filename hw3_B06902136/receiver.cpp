@@ -204,12 +204,12 @@ int main(int argc, char *argv[])
 
         if (buffer_cnt + datasize <= imgSize)
         {
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < 32 && buffer_cnt + datasize <= imgSize; i++)
             {
                 memcpy(iptr + i * datasize, buffer + i * datasize, datasize); //Buffer 滿了就把他丟到frame裡面
+                buffer_cnt += (i + 1) * datasize;
             }
 
-            buffer_cnt += 32 * datasize;
             cout << "recv date : " << buffer_cnt << endl;
         }
         else
