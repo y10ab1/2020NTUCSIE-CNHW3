@@ -152,6 +152,7 @@ int main(int argc, char *argv[])
     cout << "imgSize: " << imgSize << endl;
     int part_frame_cnt = 0;
     uchar *iptr;
+    int leftSize = imgSize;
     while (1)
     {
         // get the size of a frame in bytes
@@ -178,7 +179,7 @@ int main(int argc, char *argv[])
         // allocate a buffer to load the frame (there would be 2 buffers in the world of the Internet)
         uchar buffer[imgSize];
         // get the frame
-        int leftSize = imgSize;
+        leftSize = imgSize;
         uchar *ptr = buffer;
         while (leftSize > 0) //Buffer 還沒滿的話
         {
@@ -231,7 +232,7 @@ int main(int argc, char *argv[])
         if (part_frame_cnt == 0)
             iptr = imgTemp.data;
         
-        memcpy(iptr, buffer, sizeof(s_tmp) * 31);
+        memcpy(iptr, buffer, imgSize-leftSize);
         part_frame_cnt += 31;
         iptr += sizeof(s_tmp) * 31;
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
