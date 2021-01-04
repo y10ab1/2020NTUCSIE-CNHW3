@@ -201,7 +201,7 @@ int main(int argc, char *argv[])
             {
                 WinSize *= 2;
             }
-            else if (WinSize >= Threshold)
+            else if (WinSize >= Threshold && WinSize <= 100)
             {
                 WinSize += 1;
             }
