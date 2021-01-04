@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
         // copy a frame to the buffer
         memcpy(buffer, imgServer.data, imgSize);
         uchar *ptr = buffer;
-        for (int buffer_cnt = 0; buffer_cnt * datasize * 32 <= imgSize; buffer_cnt++)
+        for (int buffer_cnt = 0; havesend <= imgSize; buffer_cnt++)
         {
             cout << "buf cnt: " << buffer_cnt << endl;
             int packet_cnt = 0;
