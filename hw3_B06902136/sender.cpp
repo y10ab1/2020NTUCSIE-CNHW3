@@ -196,8 +196,7 @@ int main(int argc, char *argv[])
                 s_tmp.head.seqNumber = index;
                 memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
                 int sentSize = sizeof(s_tmp.data);
-                cout << "sent size: " << sentSize << endl;
-                cout << "segm size: " << sizeof(segment) << endl;
+
                 segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 if (segment_size > 0) //有送成功的話
                 {
@@ -213,8 +212,8 @@ int main(int argc, char *argv[])
                                 printf("get     ack	#%d\n", index);
                                 memset(&s_tmp, 0, sizeof(s_tmp));
                                 ptr += sentSize;
-
                                 packet_cnt++;
+                                cout << "pack cnt: " << packet_cnt << endl;
                                 index++;
                                 break;
                             }
