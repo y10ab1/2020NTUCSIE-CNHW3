@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
         memcpy(imgTemp.data, buffer, 32 * datasize);
         buffer_cnt++;
 
-        iptr += 32 * datasize;
+        //iptr += 32 * datasize;
         //memcpy(iptr, (const void *)'0', imgSize-sizeof(buffer));
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
