@@ -158,9 +158,10 @@ int main(int argc, char *argv[])
         uchar *ptr = buffer;
 
         int packet_cnt = 0;
-        while (havesend <= imgSize)
+        int buffer_cnt = 0;
+        while (havesend + 32 * datasize <= imgSize)
         {
-            for (int i = 0; i < WinSize && havesend <= imgSize; i++)
+            for (int i = 0; i < WinSize && havesend + 32 * datasize <= imgSize; i++)
             {
 
                 s_tmp.head.seqNumber = index;
