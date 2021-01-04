@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
 
         //uchar *iptr = imgTemp.data;
         //memcpy(iptr, buffer, imgSize);
-        imgTemp = TransBufferToMat(Buffer, w, h, 3);
+        imgTemp = TransBufferToMat(Buffer, 960, 540, 3);
         startWindowThread();
         imshow("Video", imgTemp);
         //Press ESC on keyboard to exit
