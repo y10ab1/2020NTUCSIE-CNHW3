@@ -188,14 +188,15 @@ int main(int argc, char *argv[])
 
         int leftSize = imgSize;
         uchar *ptr = buffer;
-        while (leftSize > 0)
+        while (leftSize > 0)//還沒傳滿一個frame的話
         {
             s_tmp.head.seqNumber = index;
             memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
             int sentSize = sizeof(s_tmp.data);
             cout << "sent size: " << sentSize << endl;
+            cout << "segm size: " << sizeof(segment) << endl;
             segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-            if (segment_size > 0)
+            if (segment_size > 0)//有送成功的話
             {
                 printf("send	data	#%d\n", index);
                 memset(&s_tmp, 0, sizeof(s_tmp));
