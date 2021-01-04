@@ -219,8 +219,8 @@ int main(int argc, char *argv[])
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
         startWindowThread();
-        if (imgTemp.elemSize() >= imgSize)
-            imshow("Video", imgTemp);
+        //if (imgTemp.elemSize() >= imgSize)
+        imshow("Video", imgTemp);
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
         // waitKey means a delay to get the next frame.
