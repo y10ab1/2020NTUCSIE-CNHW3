@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
     int part_frame_cnt = 0;
 
     int leftSize = imgSize;
-    uchar *iptr = imgTemp.data;
+    uchar *iptr;
     while (1)
     {
         // get the size of a frame in bytes
@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
                     sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
-                    
+
                     packet_cnt++;
                     ptr += recvSize; //Buffer offset
 
@@ -224,8 +224,8 @@ int main(int argc, char *argv[])
 
         // copy a fream from buffer to the container on client
         //if (part_frame_cnt == 0)
-        
 
+        iptr = imgTemp.data;
         memcpy(iptr, buffer, sizeof(buffer));
         //part_frame_cnt += 31;
         iptr += imgSize;
