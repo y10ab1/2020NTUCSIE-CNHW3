@@ -18,6 +18,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <iostream>
+#define datasize 81920
 
 typedef struct
 {
@@ -32,7 +33,7 @@ typedef struct
 typedef struct
 {
     header head;
-    char data[40960];
+    char data[datasize];
 } segment;
 
 void setIP(char *dst, char *src)

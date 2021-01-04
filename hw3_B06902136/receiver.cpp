@@ -6,6 +6,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include "opencv2/opencv.hpp"
+#define datasize 81920
 
 using namespace cv;
 using namespace std;
@@ -23,7 +24,7 @@ typedef struct
 typedef struct
 {
     header head;
-    char data[40960];
+    char data[datasize];
 } segment;
 
 void setIP(char *dst, char *src)
