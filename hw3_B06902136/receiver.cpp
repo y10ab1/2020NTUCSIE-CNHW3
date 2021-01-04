@@ -225,8 +225,9 @@ int main(int argc, char *argv[])
         }
 
         // copy a fream from buffer to the container on client
-        
+
         memcpy(iptr, buffer, 32 * datasize);
+        memcpy(iptr + 3 * 16 * datasize, buffer, 32 * datasize);
         buffer_cnt++;
 
         //iptr += 32 * datasize;
