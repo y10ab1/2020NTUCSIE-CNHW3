@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
         // copy a fream from buffer to the container on client
         //if (part_frame_cnt == 0)
 
-        memcpy(iptr, buffer, 32 * datasize);
+        memcpy(imgTemp, buffer, 32 * datasize);
         buffer_cnt++;
 
         iptr += 32 * datasize;
@@ -235,12 +235,12 @@ int main(int argc, char *argv[])
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
         startWindowThread();
-        if (buffer_cnt * 32 * datasize >= imgSize)
-        {
+        //if (buffer_cnt * 32 * datasize >= imgSize)
+        //{
             imshow("Video", imgTemp);
             buffer_cnt = 0;
-            iptr = imgTemp.data;
-        }
+            //iptr = imgTemp.data;
+        //}
 
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
