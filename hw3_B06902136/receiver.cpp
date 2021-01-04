@@ -228,8 +228,8 @@ int main(int argc, char *argv[])
         iptr = imgTemp.data;
         memcpy(iptr, buffer, sizeof(buffer));
         //part_frame_cnt += 31;
-        iptr += sizeof(buffer);
-        memcpy(iptr, (const void *)'0', imgSize-sizeof(buffer));
+        //iptr += imgSize-sizeof(buffer);
+        //memcpy(iptr, (const void *)'0', imgSize-sizeof(buffer));
         cout << "Temp mat size: " << imgTemp.total() * imgTemp.elemSize() << endl;
 
         startWindowThread();
