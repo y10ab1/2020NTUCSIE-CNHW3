@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            memcpy(iptr + buffer_cnt, buffer, imgSize - buffer_cnt); //Buffer 滿了就把他丟到frame裡面
+            //memcpy(iptr + buffer_cnt, buffer, imgSize - buffer_cnt); //Buffer 滿了就把他丟到frame裡面
             buffer_cnt = imgSize;
             cout << "recv date : " << buffer_cnt << endl;
         }
