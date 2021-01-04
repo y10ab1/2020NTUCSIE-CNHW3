@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
         leftSize = imgSize;
         uchar *ptr = buffer;
         int packet_cnt = 0;
-        while (packet_cnt < 32) //Buffer 還沒滿的話
+        while (packet_cnt < 32 && buffer_cnt + packet_cnt * datasize <= imgSize) //Buffer 還沒滿的話
         {
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
             if (segment_size > 0) //有收到東西
