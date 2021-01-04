@@ -193,9 +193,17 @@ int main(int argc, char *argv[])
                     sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
+                    if (leftSize - recvSize >= 0)
+                    {
+                        ptr += recvSize; //Buffer offset
+                        leftSize -= recvSize;
+                    }
+                    else
+                    {
+                        ptr += leftSize;
+                        leftSize = 0;
+                    }
 
-                    ptr += recvSize; //Buffer offset
-                    leftSize -= recvSize;
                     index++; //for seqNumber
                 }
                 else
@@ -208,8 +216,8 @@ int main(int argc, char *argv[])
                     printf("send     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                 }
-                if (leftSize <= sizeof(s_tmp))
-                   break;
+                //if (leftSize <= sizeof(s_tmp))
+                //  break;
                 cout << "Left: " << leftSize << endl;
             }
         }
