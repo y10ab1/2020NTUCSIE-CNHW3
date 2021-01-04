@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
         // copy a fream from buffer to the container on client
 
         memcpy(iptr, buffer, 32 * datasize); //Buffer 滿了就把他丟到frame裡面
-        iptr += imgSize / 4;
+        iptr += 32 * datasize;
         //memcpy(iptr + imgSize / 4, buffer, 32 * datasize);
         buffer_cnt += 32 * datasize;
 
