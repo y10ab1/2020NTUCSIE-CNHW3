@@ -220,7 +220,6 @@ int main(int argc, char *argv[])
 
                 imgTemp[(frame_cnt) % fb] = imgClient;
                 ++frame_cnt;
-                
 
                 //Press ESC on keyboard to exit
                 // notice: this part is necessary due to openCV's design.
@@ -234,8 +233,8 @@ int main(int argc, char *argv[])
                 memset(&buf, 0, sizeof(buf));
                 ptr = buf;
                 leftSize = imgSize;
-            } 
-            if (frame_cnt > imgSize / datasize + frame_play)
+            }
+            if (frame_cnt > imgSize / (datasize * 32) + frame_play)
             {
                 imshow("Video", imgTemp[frame_play % fb]);
                 frame_play++;
