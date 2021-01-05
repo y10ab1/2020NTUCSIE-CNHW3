@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
             for (int i = 0; i < WinSize && havesend < imgSize; i++)
             {
 
-                s_tmp.head.seqNumber = index;
+                s_tmp.head.seqNumber = index + i;
                 if (havesend + datasize <= imgSize)
                 {
                     memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
@@ -192,11 +192,11 @@ int main(int argc, char *argv[])
                 segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 if (!Tout)
                 {
-                    printf("send	data	#%d,    winSize = %d\n", index, WinSize);
+                    printf("send	data	#%d,    winSize = %d\n", index + i, WinSize);
                 }
                 else
                 {
-                    printf("rsend	data	#%d,    winSize = %d\n", index, WinSize);
+                    printf("rsend	data	#%d,    winSize = %d\n", index + i, WinSize);
                 }
             }
             for (int i = 0; i < WinSize && havesend < imgSize; i++)
