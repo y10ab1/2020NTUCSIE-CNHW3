@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
     {
 
         // allocate a buffer to load the frame (there would be 2 buffers in the world of the Internet)
-        uchar buffer[32 * datasize];
+        uchar buffer[32 * datasize]={};
         // get the frame
         leftSize = imgSize;
         uchar *ptr = buffer;
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-           // memcpy(iptr + buffer_cnt, buffer, imgSize - buffer_cnt); //Buffer 滿了就把他丟到frame裡面
+            memcpy(iptr + buffer_cnt, buffer, imgSize - buffer_cnt); //Buffer 滿了就把他丟到frame裡面
             buffer_cnt = imgSize;
             cout << "recv date : " << buffer_cnt << endl;
         }

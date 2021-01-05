@@ -122,8 +122,6 @@ int main(int argc, char *argv[])
         /*Receive message from receiver and sender*/
         memset(&s_tmp, 0, sizeof(s_tmp));
         segment_size = recvfrom(agentsocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&tmp_addr, &tmp_size);
-        std::cout << "sent size: " << segment_size << std::endl;
-        std::cout << "segm size: " << sizeof(s_tmp) << std::endl;
         if (segment_size > 0)
         {
             inet_ntop(AF_INET, &tmp_addr.sin_addr.s_addr, ipfrom, sizeof(ipfrom));

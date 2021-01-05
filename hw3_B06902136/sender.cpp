@@ -172,9 +172,9 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    memcpy(s_tmp.data, ptr, sizeof(s_tmp.data) /*imgSize - havesend*/);
+                    memcpy(s_tmp.data, ptr, imgSize - havesend);
                     havesend = imgSize;
-                    break;
+                    //break;
                 }
 
                 segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
