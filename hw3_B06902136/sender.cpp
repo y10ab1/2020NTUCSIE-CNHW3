@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE 500 /* Or: #define _BSD_SOURCE */
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -5,6 +6,9 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <string.h>
+#include <unistd.h>
+#include <signal.h>
+#include <algorithm>
 #include "opencv2/opencv.hpp"
 #define datasize 4096
 
@@ -28,6 +32,7 @@ typedef struct
 } segment;
 int Threshold = 16;
 int WinSize = 1;
+bool Tout = 0;
 
 void setIP(char *dst, char *src)
 {
@@ -40,6 +45,14 @@ void setIP(char *dst, char *src)
         sscanf(src, "%s", dst);
     }
 }
+void sigalrm_fn(int sig)
+{
+
+    printf("time    out,        threshold=%d\n", max(Threshold / 2, 1));
+    Tout = 1;
+
+    return;
+}
 
 int main(int argc, char *argv[])
 {
@@ -50,6 +63,9 @@ int main(int argc, char *argv[])
     socklen_t sender_size, agent_size;
     char ip[2][50];
     int port[2], i;
+
+    /*alarm*/
+    signal(SIGALRM, sigalrm_fn);
 
     if (argc != 6)
     {
@@ -135,14 +151,15 @@ int main(int argc, char *argv[])
     {
         imgServer = imgServer.clone();
     }
+    // get the size of a frame in bytes
     int imgSize = imgServer.total() * imgServer.elemSize();
 
     while (1)
     {
         //get a frame from the video to the container on server.
         cap >> imgServer;
-        int havesend = 0;
-        // get the size of a frame in bytes
+
+        int havesend = 0; //已經送了多少byte過去，基本上為Segment.data的倍數
 
         s_tmp.head.fin = 0;
         s_tmp.head.seqNumber = index;
@@ -151,13 +168,13 @@ int main(int argc, char *argv[])
 
         // allocate a buffer to load the frame (there would be 2 buffers in the world of the Internet)
         uchar buffer[imgSize];
-        cout << "imgSize: " << imgSize << endl;
+        //cout << "imgSize: " << imgSize << endl;
 
         // copy a frame to the buffer
         memcpy(buffer, imgServer.data, imgSize);
         uchar *ptr = buffer;
 
-        int packet_cnt = 0;
+        //int packet_cnt = 0;
         int buffer_cnt = 0;
         while (havesend < imgSize)
         {
@@ -172,7 +189,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    memcpy(s_tmp.data, ptr, imgSize - havesend);//只複製buffer中剩下的部分到sgment裡面
+                    memcpy(s_tmp.data, ptr, imgSize - havesend); //只複製buffer中剩下的部分到sgment裡面
                     havesend = imgSize;
                     //break;
                 }
@@ -186,10 +203,15 @@ int main(int argc, char *argv[])
                     memset(&s_tmp, 0, sizeof(s_tmp));
                     while (1)
                     {
-                        segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
-                        if (segment_size > 0)
+                        Tout = 0;
+                        ualarm(500000, 0);
+                        if (Tout != 1)
+                            segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
+                        ualarm(0, 0);
+
+                        if (segment_size > 0) //有接收成功的話
                         {
-                            if (s_tmp.head.ackNumber == index)
+                            if (s_tmp.head.ackNumber == index) //SeqNumber對的話
                             {
                                 printf("get     ack	#%d\n", index);
                                 memset(&s_tmp, 0, sizeof(s_tmp));
