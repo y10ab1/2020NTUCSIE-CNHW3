@@ -33,6 +33,7 @@ typedef struct
 segment s_tmp;
 char save[32][datasize];
 int frame_cnt = 0;
+int frame_play = 0;
 void setIP(char *dst, char *src)
 {
     if (strcmp(src, "0.0.0.0") == 0 || strcmp(src, "local") == 0 || strcmp(src, "localhost"))
@@ -186,7 +187,7 @@ int main(int argc, char *argv[])
                 break;
             }
         }
-        int frame_play = 0;
+        
         for (int i = 0; i < 32; ++i)
         {
             if (leftSize >= datasize)
