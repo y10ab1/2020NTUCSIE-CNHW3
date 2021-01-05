@@ -33,6 +33,7 @@ typedef struct
 int Threshold = 16;
 int WinSize = 1;
 bool Tout = 0;
+int segment_size = 0;
 
 void setIP(char *dst, char *src)
 {
@@ -51,6 +52,7 @@ void sigalrm_fn(int sig)
     printf("time    out,            threshold=%d\n", max(Threshold / 2, 1));
     Tout = 1;
     WinSize = 1;
+    segment_size = -1;
 
     return;
 }
@@ -107,7 +109,7 @@ int main(int argc, char *argv[])
     sender_size = sizeof(sender);
     agent_size = sizeof(agent);
 
-    int segment_size, index = 0;
+    int index = 0;
 
     // server
     Mat imgServer;
@@ -208,7 +210,7 @@ int main(int argc, char *argv[])
                         ualarm(500000, 0);
 
                         ;
-                        if (Tout || (segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size)) < 0)
+                        if ((segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size)) < 0)
                         {
                             cout << "TOUt" << endl;
                             break;
