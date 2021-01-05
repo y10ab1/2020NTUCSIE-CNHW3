@@ -57,8 +57,6 @@ int main(int argc, char *argv[])
     char ip[2][50];
     int port[2], i;
 
-    /*alarm*/
-    signal(SIGALRM, sigalrm_fn);
 
     if (argc != 6)
     {
