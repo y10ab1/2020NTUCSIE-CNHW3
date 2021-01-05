@@ -106,8 +106,7 @@ int main(int argc, char *argv[])
     memset(&s_tmp, 0, sizeof(s_tmp));
     index++;
 
-    //char *w = strtok(resolution, " ");
-   // char *h = strtok(NULL, " ");
+
     int width = atoi(strtok(resolution, " "));
     int height = atoi(strtok(NULL, " "));
     //allocate container to load frames
@@ -118,7 +117,7 @@ int main(int argc, char *argv[])
         imgClient = imgClient.clone();
     }
     int imgSize = imgClient.total() * imgClient.elemSize();
-    printf("w %d, h %d, imgsize %d\n", width, height, imgSize);
+    //printf("w %d, h %d, imgsize %d\n", width, height, imgSize);
 
     char save[32][datasize];
     uchar buf[imgSize];

@@ -15,31 +15,36 @@
 using namespace cv;
 using namespace std;
 
-typedef struct {
-	int length;
-	int seqNumber;
-	int ackNumber;
-	int fin;
-	int syn;
-	int ack;
+typedef struct
+{
+    int length;
+    int seqNumber;
+    int ackNumber;
+    int fin;
+    int syn;
+    int ack;
     int last;
 } header;
 
-typedef struct{
-	header head;
-	char data[4096];
+typedef struct
+{
+    header head;
+    char data[4096];
 } segment;
 
-void setIP(char *dst, char *src) {
-    if(strcmp(src, "0.0.0.0") == 0 || strcmp(src, "local") == 0
-            || strcmp(src, "localhost")) {
+void setIP(char *dst, char *src)
+{
+    if (strcmp(src, "0.0.0.0") == 0 || strcmp(src, "local") == 0 || strcmp(src, "localhost"))
+    {
         sscanf("127.0.0.1", "%s", dst);
-    } else {
+    }
+    else
+    {
         sscanf(src, "%s", dst);
     }
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     int sendersocket, portNum, nBytes;
     char videoname[1000];
@@ -51,9 +56,9 @@ int main(int argc, char* argv[])
 
     int ws = 1, trs = 16;
 
-    if(argc != 6)
+    if (argc != 6)
     {
-        fprintf(stderr,"用法: %s <sender IP> <agent IP> <sender port> <agent port> <videoname>\n", argv[0]);
+        fprintf(stderr, "用法: %s <sender IP> <agent IP> <sender port> <agent port> <videoname>\n", argv[0]);
         fprintf(stderr, "例如: ./sender 127.0.0.1 127.0.0.1 8887 8888 tmp.mpg\n");
         exit(1);
     }
@@ -78,7 +83,7 @@ int main(int argc, char* argv[])
     memset(sender.sin_zero, '\0', sizeof(sender.sin_zero));
 
     /*bind socket*/
-    bind(sendersocket,(struct sockaddr *)&sender,sizeof(sender));
+    bind(sendersocket, (struct sockaddr *)&sender, sizeof(sender));
 
     /*Configure settings in agent struct*/
     agent.sin_family = AF_INET;
@@ -92,10 +97,9 @@ int main(int argc, char* argv[])
 
     int segment_size, index = 1;
 
-    struct timeval tv;
-    tv.tv_sec = 0;
-    tv.tv_usec = 50000;
-    if (setsockopt(sendersocket, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0) {
+    struct timeval tv = {0, 50000};
+    if (setsockopt(sendersocket, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0)
+    {
         perror("Error");
     }
 
@@ -109,12 +113,12 @@ int main(int argc, char* argv[])
     //allocate container to load frames
     imgServer = Mat::zeros(height, width, CV_8UC3);
     // ensure the memory is continuous (for efficiency issue.)
-    if (!imgServer.isContinuous()) {
+    if (!imgServer.isContinuous())
+    {
         imgServer = imgServer.clone();
     }
     imgSize = imgServer.total() * imgServer.elemSize();
     printf("w %d, h %d, imgsize %d\n", width, height, imgSize);
-
 
     memset(&s_tmp, 0, sizeof(s_tmp));
     s_tmp.head.fin = 1;
@@ -128,21 +132,25 @@ int main(int argc, char* argv[])
     memset(&s_tmp, 0, sizeof(s_tmp));
     ++index;
     ++ws;
-    
+
     *cap >> imgServer;
     uchar buf[imgSize];
     memcpy(buf, imgServer.data, imgSize);
     int leftSize = imgSize;
     uchar *ptr = buf;
     queue<segment> tmp, tmp2, tmp3;
-    while (1) {
-        for (int i = 0; i < ws; ++i) {
-            if (!tmp.empty()) {
+    while (1)
+    {
+        for (int i = 0; i < ws; ++i)
+        {
+            if (!tmp.empty())
+            {
                 s_tmp = tmp.front();
                 index = s_tmp.head.seqNumber;
                 //printf("index = %d\n", index);
                 tmp.pop();
-                if (i == ws-1) {
+                if (i == ws - 1)
+                {
                     s_tmp.head.last = 1;
                 }
                 tmp2.push(s_tmp);
@@ -150,14 +158,16 @@ int main(int argc, char* argv[])
                 printf("send	data	#%d,\twinSize = %d\n", index, ws);
                 ++index;
             }
-            else if (leftSize >= 4096) {
+            else if (leftSize >= 4096)
+            {
                 memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
                 s_tmp.head.seqNumber = index;
                 int sentSize = sizeof(s_tmp.data);
-                
+
                 ptr += 4096;
                 leftSize -= 4096;
-                if (i == ws-1) {
+                if (i == ws - 1)
+                {
                     s_tmp.head.last = 1;
                 }
 
@@ -167,11 +177,13 @@ int main(int argc, char* argv[])
                 memset(&s_tmp, 0, sizeof(s_tmp));
                 ++index;
             }
-            else {
+            else
+            {
                 memcpy(s_tmp.data, ptr, leftSize);
                 s_tmp.head.seqNumber = index;
 
-                if (i == ws-1) {
+                if (i == ws - 1)
+                {
                     s_tmp.head.last = 1;
                 }
 
@@ -182,7 +194,8 @@ int main(int argc, char* argv[])
                 ++index;
 
                 int result = cap->read(imgServer);
-                if (!result) {
+                if (!result)
+                {
                     s_tmp.head.seqNumber = index;
                     s_tmp.head.fin = 1;
                     sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
@@ -199,48 +212,61 @@ int main(int argc, char* argv[])
         }
 
         int get = 0, last_ack;
-        for (int i = 0; i < ws; ++i) {
-            if (recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size) > 0) {
+        for (int i = 0; i < ws; ++i)
+        {
+            if (recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size) > 0)
+            {
                 last_ack = s_tmp.head.ackNumber;
                 printf("get     ack	#%d\n", s_tmp.head.ackNumber);
                 memset(&s_tmp, 0, sizeof(s_tmp));
             }
         }
-        if (index != last_ack+1) {
-            trs = MAX(ws/2, 1);
+        if (index != last_ack + 1)
+        {
+            trs = MAX(ws / 2, 1);
             printf("time\tout,\t\t\tthreshold = %d\n", trs);
             ws = 1;
         }
-        else {
-            ws = (ws > trs)? ws+1 : ws*2;
+        else
+        {
+            ws = (ws > trs) ? ws + 1 : ws * 2;
         }
-        index = last_ack+1;
+        index = last_ack + 1;
         segment aa, bb;
-        while (1) {
-            if (tmp.empty() && tmp2.empty()) {
+        while (1)
+        {
+            if (tmp.empty() && tmp2.empty())
+            {
                 break;
             }
-            else if (!tmp.empty() && tmp2.empty()) {
+            else if (!tmp.empty() && tmp2.empty())
+            {
                 aa = tmp.front();
                 tmp.pop();
                 tmp3.push(aa);
             }
-            else if (tmp.empty() && !tmp2.empty()) {
+            else if (tmp.empty() && !tmp2.empty())
+            {
                 aa = tmp2.front();
                 tmp2.pop();
                 tmp3.push(aa);
             }
-            else {
-                aa = tmp.front(); bb = tmp2.front();
-                if (aa.head.seqNumber < bb.head.seqNumber) {
+            else
+            {
+                aa = tmp.front();
+                bb = tmp2.front();
+                if (aa.head.seqNumber < bb.head.seqNumber)
+                {
                     tmp3.push(aa);
                     tmp.pop();
                 }
-                else if (aa.head.seqNumber > bb.head.seqNumber) {
+                else if (aa.head.seqNumber > bb.head.seqNumber)
+                {
                     tmp3.push(bb);
                     tmp2.pop();
                 }
-                else {
+                else
+                {
                     tmp3.push(aa);
                     tmp.pop();
                     tmp2.pop();
@@ -248,19 +274,23 @@ int main(int argc, char* argv[])
             }
         }
         tmp = tmp3;
-        while (!tmp2.empty()) tmp2.pop();
-        while (!tmp3.empty()) tmp3.pop();
-        while (!tmp.empty()) {
+        while (!tmp2.empty())
+            tmp2.pop();
+        while (!tmp3.empty())
+            tmp3.pop();
+        while (!tmp.empty())
+        {
             //printf("%d!!!  ", index);
-            if (tmp.front().head.seqNumber < index) {
+            if (tmp.front().head.seqNumber < index)
+            {
                 //printf("%d  ", tmp.front().head.seqNumber);
                 tmp.pop();
             }
-            else break;
+            else
+                break;
         }
-        
     }
     ////////////////////////////////////////////////////
-	cap->release();
+    cap->release();
     return 0;
 }
