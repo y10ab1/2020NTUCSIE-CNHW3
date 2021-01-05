@@ -185,6 +185,7 @@ int main(int argc, char *argv[])
         int buffer_cnt = 0;
         while (havesend < imgSize)
         {
+            Tout = 0;
             for (int i = 0; i < WinSize && havesend < imgSize; i++)
             {
 
@@ -216,7 +217,7 @@ int main(int argc, char *argv[])
                             printf("time    out,            threshold=%d\n", max(Threshold / 2, 1));
 
                             WinSize = 1;
-
+                            Tout = 1;
                             break;
                         }
 
@@ -240,13 +241,15 @@ int main(int argc, char *argv[])
                             }
                         }
                     }
+                    if (Tout)
+                        break;
                 }
             }
-            if (WinSize < Threshold)
+            if (WinSize < Threshold && Tout == 0)
             {
                 WinSize *= 2;
             }
-            else if (WinSize >= Threshold && WinSize <= 100)
+            else if (WinSize >= Threshold && WinSize <= 100 && Tout == 0)
             {
                 WinSize += 1;
             }
