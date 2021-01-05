@@ -12,6 +12,8 @@
 #include <algorithm>
 #include "opencv2/opencv.hpp"
 
+#define datasize 4096
+
 using namespace cv;
 using namespace std;
 
@@ -29,7 +31,7 @@ typedef struct
 typedef struct
 {
     header head;
-    char data[4096];
+    char data[datasize];
 } segment;
 
 void setIP(char *dst, char *src)
@@ -51,6 +53,7 @@ int main(int argc, char *argv[])
     segment s_tmp;
     struct sockaddr_in sender, agent;
     socklen_t sender_size, agent_size;
+    queue<segment> tmp, tmp2, tmp3;
     char ip[2][50];
     int port[2], i;
 
@@ -142,7 +145,7 @@ int main(int argc, char *argv[])
     memcpy(buf, imgServer.data, imgSize);
     int leftSize = imgSize;
     uchar *ptr = buf;
-    queue<segment> tmp, tmp2, tmp3;
+
     while (1)
     {
         for (int i = 0; i < windowSize; ++i)
@@ -162,14 +165,14 @@ int main(int argc, char *argv[])
                 printf("send	data	#%d,\twinSize = %d\n", index, windowSize);
                 ++index;
             }
-            else if (leftSize >= 4096)
+            else if (leftSize >= datasize)
             {
                 memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
                 s_tmp.head.seqNumber = index;
                 int sentSize = sizeof(s_tmp.data);
 
-                ptr += 4096;
-                leftSize -= 4096;
+                ptr += datasize;
+                leftSize -= datasize;
                 if (i == windowSize - 1)
                 {
                     s_tmp.head.last = 1;
