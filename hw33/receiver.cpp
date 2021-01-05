@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
 
                 imgTemp[(frame_cnt) % fb] = imgClient;
                 ++frame_cnt;
-                framebuf.push(imgClient.data);
+                
 
                 //Press ESC on keyboard to exit
                 // notice: this part is necessary due to openCV's design.
@@ -234,18 +234,11 @@ int main(int argc, char *argv[])
                 memset(&buf, 0, sizeof(buf));
                 ptr = buf;
                 leftSize = imgSize;
-            } /*
+            } 
             if (frame_cnt > imgSize / datasize + frame_play)
             {
                 imshow("Video", imgTemp[frame_play % fb]);
                 frame_play++;
-            }*/
-            if (framebuf.size() > fb / 2)
-            {
-                Mat TT;
-                TT.data = framebuf.front();
-                imshow("Video", TT);
-                framebuf.pop();
             }
         }
         memset(&save, 0, sizeof(save));
