@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
     tmp_size = sizeof(tmp_addr);
 
     printf("可以開始測囉^Q^\n");
-    printf("sender info: ip = %s port = %d and receiver info: ip = %s port = %d\n", ip[0], port[0], ip[2], port[2]);
+    printf("sender info: ip = %s port = %d\nreceiver info: ip = %s port = %d\n", ip[0], port[0], ip[2], port[2]);
     printf("agent info: ip = %s port = %d\n", ip[1], port[1]);
 
     int total_data = 0;
