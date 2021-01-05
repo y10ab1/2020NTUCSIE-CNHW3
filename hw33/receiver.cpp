@@ -73,8 +73,8 @@ int main(int argc, char *argv[])
     socklen_t agent_size, recv_size;
     char ip[2][50];
     int port[2], i;
-    Mat haha;
-    queue<CV_8UC3> framebuf;
+
+    queue<uchar *> framebuf;
 
     if (argc != 5)
     {
@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
 
                 imgTemp[(frame_cnt) % fb] = imgClient;
                 ++frame_cnt;
-                framebuf.push(imgClient);
+                framebuf.push(imgClient.data);
 
                 //Press ESC on keyboard to exit
                 // notice: this part is necessary due to openCV's design.
@@ -243,7 +243,8 @@ int main(int argc, char *argv[])
             }*/
             if (framebuf.size() > fb / 2)
             {
-                imshow("Video", framebuf.front());
+                imgTemp.data = framebuf.front();
+                imshow("Video", imgTemp);
                 framebuf.pop();
             }
         }
