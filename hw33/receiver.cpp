@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
             sendto(receiversocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
             printf("send    ack     #%d\n", index);
 
-            if (last == 1)
+            if (s_tmp.head.last)
             {
                 ++index;
                 break;
