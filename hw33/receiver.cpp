@@ -8,6 +8,7 @@
 #include "opencv2/opencv.hpp"
 #define datasize 4096
 #define SegDataSize 4096 * 32
+#define fb 24
 
 #define BUFFSIZE 32
 
@@ -53,7 +54,7 @@ void makepacket(int index)
 
     return;
 }
-Mat imgTemp[10];
+Mat imgTemp[fb];
 
 int main(int argc, char *argv[])
 {
@@ -200,10 +201,10 @@ int main(int argc, char *argv[])
                 uchar *iptr = imgClient.data;
                 memcpy(iptr, buf, imgSize);
 
-                imgTemp[(frame_cnt) % 10] = imgClient;
+                imgTemp[(frame_cnt) % fb] = imgClient;
                 ++frame_cnt;
-                if (frame_cnt > 9)
-                    imshow("Video", imgTemp[frame_cnt % 10]);
+                if (frame_cnt > fb - 1)
+                    imshow("Video", imgTemp[frame_cnt % fb]);
 
                 memset(&buf, 0, sizeof(buf));
                 ptr = buf;
