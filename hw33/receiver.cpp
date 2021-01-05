@@ -243,8 +243,9 @@ int main(int argc, char *argv[])
             }*/
             if (framebuf.size() > fb / 2)
             {
-                imgTemp.data = framebuf.front();
-                imshow("Video", imgTemp);
+                Mat TT;
+                TT.data = framebuf.front();
+                imshow("Video", TT);
                 framebuf.pop();
             }
         }
