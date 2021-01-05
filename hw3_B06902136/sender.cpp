@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    memcpy(s_tmp.data, ptr, imgSize - havesend);
+                    memcpy(s_tmp.data, ptr, imgSize - havesend);//只複製buffer中剩下的部分到sgment裡面
                     havesend = imgSize;
                     //break;
                 }
@@ -194,8 +194,8 @@ int main(int argc, char *argv[])
                                 printf("get     ack	#%d\n", index);
                                 memset(&s_tmp, 0, sizeof(s_tmp));
                                 ptr += sizeof(s_tmp.data);
-                                packet_cnt++;
-                                cout << "pack cnt: " << packet_cnt << endl;
+                                //packet_cnt++;
+                                //cout << "pack cnt: " << packet_cnt << endl;
                                 index++;
                                 break;
                             }
