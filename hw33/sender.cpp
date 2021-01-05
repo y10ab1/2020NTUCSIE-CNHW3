@@ -197,23 +197,7 @@ int main(int argc, char* argv[])
                 ptr = buf;
             }
         }
-/*
-        if (!tmp.empty()) {
-            s_tmp = tmp.front();
-            s_tmp.head.last = 0;
-            if (s_tmp.head.seqNumber < index) {
-                tmp.pop();
-                --i; continue;
-            }
-            if (i == ws-1) {
-                s_tmp.head.last = 1;
-                printf("                                              %d last\n", s_tmp.head.seqNumber);
-            }
-            sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-            printf("send	data	#%d,\twinSize = %d\n", index, ws);
-            ++index;
-        }
-*/
+
         int get = 0, last_ack;
         for (int i = 0; i < ws; ++i) {
             if (recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size) > 0) {

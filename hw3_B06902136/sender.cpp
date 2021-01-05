@@ -202,56 +202,47 @@ int main(int argc, char *argv[])
             for (int i = 0; i < WinSize && havesend <= imgSize; i++)
             {
                 //cout << "have sent: " << havesend << endl;
-                if (segment_size > 0) //有送成功的話
+
+                memset(&s_tmp, 0, sizeof(s_tmp));
+                //while (1)
+                //{
+
+                if ((segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size)) < 0)
                 {
+                    printf("time    out,            threshold=%d\n", max(Threshold / 2, 1));
 
+                    WinSize = 1;
+                    Tout = 1;
+                    Threshold = max(Threshold / 2, 1);
+                    break;
+                }
+
+                if (s_tmp.head.ackNumber == index) //SeqNumber對的話
+                {
+                    printf("get     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
-                    //while (1)
-                    //{
-
-                    if ((segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size)) < 0)
+                    ptr += sizeof(s_tmp.data);
+                    //packet_cnt++;
+                    //cout << "pack cnt: " << packet_cnt << endl;
+                    index++;
+                    //break;
+                    if (havesend + datasize <= imgSize)
                     {
-                        printf("time    out,            threshold=%d\n", max(Threshold / 2, 1));
-
-                        WinSize = 1;
-                        Tout = 1;
-                        Threshold = max(Threshold / 2, 1);
-                        break;
+                        //memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
+                        havesend += sizeof(s_tmp.data);
                     }
-
-                    if (segment_size > 0) //有接收成功的話
+                    else
                     {
-                        if (s_tmp.head.ackNumber == index) //SeqNumber對的話
-                        {
-                            printf("get     ack	#%d\n", index);
-                            memset(&s_tmp, 0, sizeof(s_tmp));
-                            ptr += sizeof(s_tmp.data);
-                            //packet_cnt++;
-                            //cout << "pack cnt: " << packet_cnt << endl;
-                            index++;
-                            //break;
-                            if (havesend + datasize <= imgSize)
-                            {
-                                //memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
-                                havesend += sizeof(s_tmp.data);
-                            }
-                            else
-                            {
-                                //memcpy(s_tmp.data, ptr, imgSize - havesend); //只複製buffer中剩下的部分到sgment裡面
-                                havesend = imgSize;
-                                //break;
-                            }
-                        }
-                        else
-                        {
-                            printf("get     ack	#%d\n", s_tmp.head.ackNumber);
-                            memset(&s_tmp, 0, sizeof(s_tmp));
-                            //break;
-                        }
+                        //memcpy(s_tmp.data, ptr, imgSize - havesend); //只複製buffer中剩下的部分到sgment裡面
+                        havesend = imgSize;
+                        //break;
                     }
-                    //}
-                    //if (Tout)
-                    //  break;
+                }
+                else
+                {
+                    printf("get     ack	#%d\n", s_tmp.head.ackNumber);
+                    memset(&s_tmp, 0, sizeof(s_tmp));
+                    //break;
                 }
             }
             if (WinSize < Threshold && Tout == 0)
