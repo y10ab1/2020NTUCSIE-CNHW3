@@ -120,12 +120,12 @@ int main(int argc, char *argv[])
     //printf("w %d, h %d, imgsize %d\n", width, height, imgSize);
 
     char save[32][datasize];
-    uchar buf[imgSize];
     int leftSize = imgSize;
+    uchar buf[imgSize];
     uchar *ptr = buf;
     while (1)
     {
-        for (int i = 0; i < BUFFSIZE; ++i)
+        for (int i = 0; i < 32; ++i)
         {
             recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
             //printf("%d %d\n", s_tmp.head.seqNumber, index);
@@ -171,6 +171,7 @@ int main(int argc, char *argv[])
             s_tmp.head.ackNumber = index;
             sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
             printf("send    ack     #%d\n", index);
+
             if (last == 1)
             {
                 ++index;
@@ -180,9 +181,9 @@ int main(int argc, char *argv[])
 
         for (int i = 0; i < 32; ++i)
         {
-            if (leftSize >= sizeof(save[i]))
+            if (leftSize >= sizeof(datasize)
             {
-                memcpy(ptr, save[i], sizeof(save[i]));
+                memcpy(ptr, save[i], sizeof(datasize);
                 leftSize -= sizeof(datasize);
                 ptr += sizeof(datasize);
             }
