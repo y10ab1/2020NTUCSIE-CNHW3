@@ -8,7 +8,7 @@
 #include "opencv2/opencv.hpp"
 #define datasize 4096
 #define SegDataSize 4096 * 32
-#define fb 24
+#define fb 120
 
 #define BUFFSIZE 32
 
@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
                 ptr = buf;
                 leftSize = imgSize;
             }
-            if (frame_cnt > fb - 1)
+            if (frame_cnt > fb - 1 + frame_play)
             {
                 imshow("Video", imgTemp[frame_play % fb]);
                 frame_play++;
