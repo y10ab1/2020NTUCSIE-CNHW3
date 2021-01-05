@@ -6,6 +6,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <iostream>
+#include <string>
 #include <vector>
 #include <queue>
 #include <algorithm>
@@ -17,6 +18,7 @@
 #define BUFFSIZE 32
 
 using namespace cv;
+using namespace std;
 
 typedef struct
 {
@@ -36,8 +38,7 @@ typedef struct
 } segment;
 segment s_tmp;
 char save[32][datasize];
-Mat haha;
-queue<haha.type()> framebuf;
+
 int frame_cnt = 0;
 int frame_play = 0;
 void setIP(char *dst, char *src)
@@ -72,6 +73,8 @@ int main(int argc, char *argv[])
     socklen_t agent_size, recv_size;
     char ip[2][50];
     int port[2], i;
+    Mat haha;
+    queue<CV_8UC3> framebuf;
 
     if (argc != 5)
     {
