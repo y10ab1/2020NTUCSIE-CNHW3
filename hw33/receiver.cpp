@@ -142,8 +142,7 @@ int main(int argc, char *argv[])
             {
                 printf("recv	fin\n");
                 memset(&s_tmp, 0, sizeof(s_tmp));
-                s_tmp.head.ack = 1;
-                s_tmp.head.fin = 1;
+                s_tmp.head.ack = 1, s_tmp.head.fin = 1;
                 sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send    finack\n");
             }
@@ -177,7 +176,7 @@ int main(int argc, char *argv[])
             sendto(receiversocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
             printf("send    ack     #%d\n", index);
 
-            if (s_tmp.head.last)
+            if (last == 1)
             {
                 ++index;
                 break;
