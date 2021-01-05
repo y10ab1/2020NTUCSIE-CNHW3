@@ -196,8 +196,8 @@ int main(int argc, char *argv[])
                 memcpy(ptr, save[i], leftSize);
                 uchar *iptr = imgClient.data;
                 memcpy(iptr, buf, imgSize);
-
-                imshow("Video", imgClient);
+                Mat imgTemp = imgClient;
+                imshow("Video", imgTemp);
 
                 memset(&buf, 0, sizeof(buf));
                 ptr = buf;
