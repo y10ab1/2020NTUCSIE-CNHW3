@@ -31,6 +31,7 @@ typedef struct
 } segment;
 segment s_tmp;
 char save[32][datasize];
+int frame_cnt = 0;
 void setIP(char *dst, char *src)
 {
     if (strcmp(src, "0.0.0.0") == 0 || strcmp(src, "local") == 0 || strcmp(src, "localhost"))
@@ -52,6 +53,8 @@ void makepacket(int index)
 
     return;
 }
+Mat imgTemp[10];
+
 int main(int argc, char *argv[])
 {
     int receiversocket, portNum, nBytes;
@@ -196,8 +199,11 @@ int main(int argc, char *argv[])
                 memcpy(ptr, save[i], leftSize);
                 uchar *iptr = imgClient.data;
                 memcpy(iptr, buf, imgSize);
-                Mat imgTemp = imgClient;
-                imshow("Video", imgTemp);
+
+                imgTemp[(frame_cnt) % 10] = imgClient;
+                ++frame_cnt;
+                if (frame_cnt > 9)
+                    imshow("Video", imgTemp[frame_cnt % 10]);
 
                 memset(&buf, 0, sizeof(buf));
                 ptr = buf;
