@@ -236,7 +236,7 @@ int main(int argc, char *argv[])
             }
             if (frame_cnt > imgSize / (datasize * 32) + frame_play)
             {
-                for (int i = 0; i < 24; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     imshow("Video", imgTemp[frame_play % fb]);
                     frame_play++;
