@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 
     int segment_size, index = 0;
 
-    struct timeval timeout = {1, 0}; //0.1s
+    struct timeval timeout = {1, 500000}; //0.1s
 
     int ret = setsockopt(sendersocket, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout));
 
@@ -179,12 +179,12 @@ int main(int argc, char *argv[])
                 s_tmp.head.seqNumber = index + i;
                 if (havesend + i * datasize + datasize <= imgSize)
                 {
-                    memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
+                    memcpy(s_tmp.data, ptr + i * datasize, sizeof(s_tmp.data));
                     //havesend += sizeof(s_tmp.data);
                 }
                 else
                 {
-                    memcpy(s_tmp.data, ptr, imgSize - havesend); //只複製buffer中剩下的部分到sgment裡面
+                    memcpy(s_tmp.data, ptr + i * datasize, imgSize - havesend); //只複製buffer中剩下的部分到sgment裡面
                     //havesend = imgSize;
                     //break;
                 }
