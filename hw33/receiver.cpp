@@ -210,8 +210,8 @@ int main(int argc, char *argv[])
                 uchar *iptr = imgClient.data;
                 memcpy(iptr, buf, imgSize);
 
-                imgTemp[(frame_cnt) % fb] = imgClient;
-                ++frame_cnt;
+                //imgTemp[(frame_cnt) % fb] = imgClient;
+                //++frame_cnt;
                 imshow("Video", imgClient);
 
                 memset(&buf, 0, sizeof(buf));
