@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
                 break;
             }
         }
-        
+
         for (int i = 0; i < 32; ++i)
         {
             if (leftSize >= datasize)
@@ -210,8 +210,11 @@ int main(int argc, char *argv[])
                 leftSize = imgSize;
             }
             if (frame_cnt > fb - 1)
+            {
                 imshow("Video", imgTemp[frame_play % fb]);
-            frame_play++;
+                frame_play++;
+            }
+
             //Press ESC on keyboard to exit
             // notice: this part is necessary due to openCV's design.
             // waitKey means a delay to get the next frame.
