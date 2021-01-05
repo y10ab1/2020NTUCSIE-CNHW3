@@ -148,7 +148,7 @@ int main(int argc, char *argv[])
             imgTemp[i] = imgTemp[i].clone();
         }
     }
-    queue<uchar[imgSize]> framebuf;
+    //queue<uchar[imgSize]> framebuf;
 
     int leftSize = imgSize;
     uchar buf[imgSize];
