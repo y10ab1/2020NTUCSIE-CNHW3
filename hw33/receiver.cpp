@@ -26,7 +26,7 @@ typedef struct
 typedef struct
 {
     header head;
-    char data[4096];
+    char data[datasize];
 } segment;
 
 void setIP(char *dst, char *src)
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     // client
     Mat imgClient;
     // get the resolution of the video
-    char resolution[4096] = {0};
+    char resolution[datasize] = {0};
 
     segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
     printf("recv	data	#%d\n", index);
@@ -108,8 +108,8 @@ int main(int argc, char *argv[])
 
     char *w = strtok(resolution, " ");
     char *h = strtok(NULL, " ");
-    int width = atoi(w);
-    int height = atoi(h);
+    int width = atoi(strtok(resolution, " "));
+    int height = atoi(strtok(NULL, " "));
     //allocate container to load frames
     imgClient = Mat::zeros(height, width, CV_8UC3);
     // ensure the memory is continuous (for efficiency issue.)
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
     int imgSize = imgClient.total() * imgClient.elemSize();
     printf("w %d, h %d, imgsize %d\n", width, height, imgSize);
 
-    char save[32][4096];
+    char save[32][datasize];
     uchar buf[imgSize];
     int leftSize = imgSize;
     uchar *ptr = buf;
