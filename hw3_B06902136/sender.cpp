@@ -50,6 +50,7 @@ void sigalrm_fn(int sig)
 
     printf("time    out,            threshold=%d\n", max(Threshold / 2, 1));
     Tout = 1;
+    WinSize = 1;
 
     return;
 }
@@ -205,19 +206,13 @@ int main(int argc, char *argv[])
                     {
                         Tout = 0;
                         ualarm(500000, 0);
-                        while (Tout != 1)
+
+                        segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
+                        if (Tout)
                         {
-                            segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
-                            if (Tout != 1)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                cout << "TTTT\n"
-                                     << endl;
-                            }
+                            cout << "TOUt" << endl;
                         }
+
                         ualarm(0, 0);
 
                         if (segment_size > 0) //有接收成功的話
