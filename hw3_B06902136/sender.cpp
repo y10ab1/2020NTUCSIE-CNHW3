@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
     int index = 0;
 
-    struct timeval timeout = {0, 500000}; //0.5s
+    struct timeval timeout = {0, 50000}; //0.05s
 
     int ret = setsockopt(sendersocket, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout));
 
