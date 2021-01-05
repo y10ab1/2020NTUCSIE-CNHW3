@@ -111,6 +111,10 @@ int main(int argc, char *argv[])
 
     int index = 0;
 
+    struct timeval timeout = {0, 500000}; //0.5s
+
+    int ret = setsockopt(sendersocket, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout));
+
     // server
     Mat imgServer;
     VideoCapture cap;
@@ -206,18 +210,17 @@ int main(int argc, char *argv[])
                     memset(&s_tmp, 0, sizeof(s_tmp));
                     while (1)
                     {
-                        Tout = 0;
-                        ualarm(500000, 0);
 
-                        ;
-                        if ((segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size)) < 0)
+                        if ((segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size)) < 0 && errno == EAGAIN)
                         {
-                            cout << "TOUt" << endl;
+                            printf("time    out,            threshold=%d\n", max(Threshold / 2, 1));
+                            ]
+                            WinSize = 1;
+
                             break;
                         }
 
-                        ualarm(0, 0);
-
+                      
                         if (segment_size > 0) //有接收成功的話
                         {
                             if (s_tmp.head.ackNumber == index) //SeqNumber對的話
