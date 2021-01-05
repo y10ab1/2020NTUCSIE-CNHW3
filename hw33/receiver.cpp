@@ -181,11 +181,11 @@ int main(int argc, char *argv[])
 
         for (int i = 0; i < 32; ++i)
         {
-            if (leftSize >= sizeof(datasize))
+            if (leftSize >= datasize)
             {
-                memcpy(ptr, save[i], sizeof(datasize));
-                leftSize -= sizeof(datasize);
-                ptr += sizeof(datasize);
+                memcpy(ptr, save[i], datasize);
+                leftSize -= datasize;
+                ptr += datasize;
             }
             else
             {
