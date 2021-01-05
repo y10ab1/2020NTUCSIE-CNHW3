@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
                 ptr = buf;
                 leftSize = imgSize;
             }
-            while (frame_cnt > imgSize / (datasize * 32) + frame_play)
+            while (frame_cnt > imgSize / (datasize * 16) + frame_play)
             {
                 imshow("Video", imgTemp[frame_play % fb]);
                 frame_play++;
