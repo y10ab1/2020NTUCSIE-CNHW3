@@ -228,7 +228,7 @@ int main(int argc, char *argv[])
         //Press ESC on keyboard to exit
         // notice: this part is necessary due to openCV's design.
         // waitKey means a delay to get the next frame.
-        char c = (char)waitKey(3.3333);
+        char c = (char)waitKey(1);
         if (c == 27)
         {
             break;
