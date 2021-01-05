@@ -57,7 +57,6 @@ int main(int argc, char *argv[])
     char ip[2][50];
     int port[2], i;
 
-
     if (argc != 6)
     {
         fprintf(stderr, "用法: %s <sender IP> <agent IP> <sender port> <agent port> <videoname>\n", argv[0]);
@@ -191,46 +190,56 @@ int main(int argc, char *argv[])
                 }
 
                 segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-
+                if (!Tout)
+                {
+                    printf("send	data	#%d,    winSize = %d\n", index, WinSize);
+                }
+                else
+                {
+                    printf("rsend	data	#%d,    winSize = %d\n", index, WinSize);
+                }
+            }
+            for (int i = 0; i < WinSize && havesend < imgSize; i++)
+            {
                 //cout << "have sent: " << havesend << endl;
                 if (segment_size > 0) //有送成功的話
                 {
-                    printf("send	data	#%d,    winSize = %d\n", index, WinSize);
+
                     memset(&s_tmp, 0, sizeof(s_tmp));
-                    while (1)
+                    //while (1)
+                    //{
+
+                    if ((segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size)) < 0)
                     {
+                        printf("time    out,            threshold=%d\n", max(Threshold / 2, 1));
 
-                        if ((segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size)) < 0)
+                        WinSize = 1;
+                        Tout = 1;
+                        break;
+                    }
+
+                    if (segment_size > 0) //有接收成功的話
+                    {
+                        if (s_tmp.head.ackNumber == index) //SeqNumber對的話
                         {
-                            printf("time    out,            threshold=%d\n", max(Threshold / 2, 1));
-
-                            WinSize = 1;
-                            Tout = 1;
-                            break;
+                            printf("get     ack	#%d\n", index);
+                            memset(&s_tmp, 0, sizeof(s_tmp));
+                            ptr += sizeof(s_tmp.data);
+                            //packet_cnt++;
+                            //cout << "pack cnt: " << packet_cnt << endl;
+                            index++;
+                            //break;
                         }
-
-                        if (segment_size > 0) //有接收成功的話
+                        else
                         {
-                            if (s_tmp.head.ackNumber == index) //SeqNumber對的話
-                            {
-                                printf("get     ack	#%d\n", index);
-                                memset(&s_tmp, 0, sizeof(s_tmp));
-                                ptr += sizeof(s_tmp.data);
-                                //packet_cnt++;
-                                //cout << "pack cnt: " << packet_cnt << endl;
-                                index++;
-                                break;
-                            }
-                            else
-                            {
-                                printf("get     ack	#%d\n", s_tmp.head.ackNumber);
-                                memset(&s_tmp, 0, sizeof(s_tmp));
-                                break;
-                            }
+                            printf("get     ack	#%d\n", s_tmp.head.ackNumber);
+                            memset(&s_tmp, 0, sizeof(s_tmp));
+                            //break;
                         }
                     }
-                    if (Tout)
-                        break;
+                    //}
+                    //if (Tout)
+                    //  break;
                 }
             }
             if (WinSize < Threshold && Tout == 0)

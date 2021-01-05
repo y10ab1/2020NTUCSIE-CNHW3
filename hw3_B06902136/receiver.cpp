@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
             segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
             if (segment_size > 0) //有收到東西
             {
-                if (s_tmp.head.seqNumber == index++) //SeqNumber有對
+                if (s_tmp.head.seqNumber == index) //SeqNumber有對
                 {
                     printf("recv	data	#%d\n", index);
                     memcpy(ptr, s_tmp.data, sizeof(s_tmp.data)); //把收到的data複製到buffer裡面
@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
                     packet_cnt++;
                     ptr += recvSize; //Buffer offset
 
-                    //index++; //for seqNumber
+                    index++; //for seqNumber
                 }
                 else
                 {
