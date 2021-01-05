@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
             {
                 WinSize *= 2;
             }
-            else if (WinSize >= Threshold && WinSize < 32 && Tout == 0)
+            else if (WinSize >= Threshold && WinSize < 64 && Tout == 0)
             {
                 WinSize += 1;
             }
