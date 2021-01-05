@@ -134,6 +134,14 @@ int main(int argc, char *argv[])
     int imgSize = imgClient.total() * imgClient.elemSize();
     //printf("w %d, h %d, imgsize %d\n", width, height, imgSize);
 
+    for (int i = 0; i < fb; i++)
+    {
+        if (!imgTemp[i].isContinuous())
+        {
+            imgTemp[i] = imgTemp[i].clone();
+        }
+    }
+
     int leftSize = imgSize;
     uchar buf[imgSize];
     uchar *ptr = buf;
