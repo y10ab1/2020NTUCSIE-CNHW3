@@ -43,12 +43,13 @@ void setIP(char *dst, char *src)
     }
 }
 
-void makepacket(int index, int i)
+void makepacket(int index)
 {
-    memcpy(save[i], s_tmp.data, datasize);
-    memset(&s_tmp, 0, sizeof(s_tmp));
+
+    memset(&s_tmp, 0, sizeof(segment));
     s_tmp.head.ack = 1;
     s_tmp.head.ackNumber = index;
+
     return;
 }
 int main(int argc, char *argv[])
@@ -149,8 +150,8 @@ int main(int argc, char *argv[])
             else if (s_tmp.head.seqNumber == index)
             {
                 printf("recv	data	#%d\n", index);
-
-                makepacket(index, i);
+                memcpy(save[i], s_tmp.data, datasize);
+                makepacket(index);
                 sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send    ack     #%d\n", index);
                 ++index;
@@ -171,9 +172,8 @@ int main(int argc, char *argv[])
             recvfrom(receiversocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
             printf("drop    data    #%d\n", s_tmp.head.seqNumber);
             int last = s_tmp.head.last;
-            memset(&s_tmp, 0, sizeof(segment));
-            s_tmp.head.ack = 1;
-            s_tmp.head.ackNumber = index;
+
+            makepacket(index);
             sendto(receiversocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
             printf("send    ack     #%d\n", index);
 
