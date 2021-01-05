@@ -36,7 +36,8 @@ typedef struct
 } segment;
 segment s_tmp;
 char save[32][datasize];
-queue<Mat> framebuf;
+Mat haha;
+queue<haha.type()> framebuf;
 int frame_cnt = 0;
 int frame_play = 0;
 void setIP(char *dst, char *src)
@@ -237,7 +238,7 @@ int main(int argc, char *argv[])
                 imshow("Video", imgTemp[frame_play % fb]);
                 frame_play++;
             }*/
-            if (framebuf.size() > fb/2)
+            if (framebuf.size() > fb / 2)
             {
                 imshow("Video", framebuf.front());
                 framebuf.pop();
