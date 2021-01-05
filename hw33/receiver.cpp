@@ -41,12 +41,12 @@ void setIP(char *dst, char *src)
         sscanf(src, "%s", dst);
     }
 }
-
+segment s_tmp;
 int main(int argc, char *argv[])
 {
     int receiversocket, portNum, nBytes;
     char videoname[1000];
-    segment s_tmp;
+
     struct sockaddr_in agent, receiver;
     socklen_t agent_size, recv_size;
     char ip[2][50];
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
             else if (s_tmp.head.seqNumber == index)
             {
                 printf("recv	data	#%d\n", index);
-                memcpy(save[i], s_tmp.data, sizeof(s_tmp.data));
+                memcpy(save[i], s_tmp.data, datasize));
                 memset(&s_tmp, 0, sizeof(s_tmp));
                 s_tmp.head.ack = 1;
                 s_tmp.head.ackNumber = index;
@@ -162,14 +162,13 @@ int main(int argc, char *argv[])
         --index;
         while (1)
         {
-            recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
-            //if (s_tmp.head.seqNumber > 35) printf("          %d %d\n", s_tmp.head.seqNumber, index);
+            recvfrom(receiversocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
             printf("drop    data    #%d\n", s_tmp.head.seqNumber);
             int last = s_tmp.head.last;
-            memset(&s_tmp, 0, sizeof(s_tmp));
+            memset(&s_tmp, 0, sizeof(segment));
             s_tmp.head.ack = 1;
             s_tmp.head.ackNumber = index;
-            sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
+            sendto(receiversocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
             printf("send    ack     #%d\n", index);
 
             if (last == 1)
