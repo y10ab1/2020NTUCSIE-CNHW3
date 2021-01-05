@@ -234,10 +234,13 @@ int main(int argc, char *argv[])
                 ptr = buf;
                 leftSize = imgSize;
             }
-            while (frame_cnt > imgSize / (datasize * 16) + frame_play)
+            if (frame_cnt > imgSize / (datasize * 32) + frame_play)
             {
-                imshow("Video", imgTemp[frame_play % fb]);
-                frame_play++;
+                for (int i = 0; i < 24; i++)
+                {
+                    imshow("Video", imgTemp[frame_play % fb]);
+                    frame_play++;
+                }
             }
         }
         memset(&save, 0, sizeof(save));
