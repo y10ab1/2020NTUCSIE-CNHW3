@@ -211,16 +211,15 @@ int main(int argc, char *argv[])
                     while (1)
                     {
 
-                        if ((segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size)) < 0 && errno == EAGAIN)
+                        if ((segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size)) < 0)
                         {
                             printf("time    out,            threshold=%d\n", max(Threshold / 2, 1));
-                            ]
+
                             WinSize = 1;
 
                             break;
                         }
 
-                      
                         if (segment_size > 0) //有接收成功的話
                         {
                             if (s_tmp.head.ackNumber == index) //SeqNumber對的話
