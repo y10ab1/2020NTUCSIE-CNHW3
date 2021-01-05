@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 
     int segment_size, index = 0;
 
-    struct timeval timeout = {0, 50000}; //0.05s
+    struct timeval timeout = {1, 100000}; //0.1s
 
     int ret = setsockopt(sendersocket, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout));
 
