@@ -8,7 +8,7 @@
 #include "opencv2/opencv.hpp"
 #define datasize 4096
 #define SegDataSize 4096 * 32
-#define fb 240
+#define fb 48
 
 #define BUFFSIZE 32
 
