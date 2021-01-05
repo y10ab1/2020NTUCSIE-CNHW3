@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
         {
             if (leftSize >= sizeof(datasize))
             {
-                memcpy(ptr, save[i], sizeof(datasize);
+                memcpy(ptr, save[i], sizeof(datasize));
                 leftSize -= sizeof(datasize);
                 ptr += sizeof(datasize);
             }
