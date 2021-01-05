@@ -173,19 +173,19 @@ int main(int argc, char *argv[])
         while (havesend < imgSize)
         {
             Tout = 0;
-            for (int i = 0; i < WinSize && havesend < imgSize; i++)
+            for (int i = 0; i < WinSize && havesend + i * datasize < imgSize; i++)
             {
 
                 s_tmp.head.seqNumber = index + i;
-                if (havesend + datasize <= imgSize)
+                if (havesend + i * datasize + datasize <= imgSize)
                 {
                     memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
-                    havesend += sizeof(s_tmp.data);
+                    //havesend += sizeof(s_tmp.data);
                 }
                 else
                 {
                     memcpy(s_tmp.data, ptr, imgSize - havesend); //只複製buffer中剩下的部分到sgment裡面
-                    havesend = imgSize;
+                    //havesend = imgSize;
                     //break;
                 }
 
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
                     printf("rsend	data	#%d,    winSize = %d\n", index + i, WinSize);
                 }
             }
-            for (int i = 0; i < WinSize && havesend < imgSize; i++)
+            for (int i = 0; i < WinSize && havesend <= imgSize; i++)
             {
                 //cout << "have sent: " << havesend << endl;
                 if (segment_size > 0) //有送成功的話
@@ -215,6 +215,7 @@ int main(int argc, char *argv[])
 
                         WinSize = 1;
                         Tout = 1;
+                        Threshold = max(Threshold / 2, 1);
                         break;
                     }
 
@@ -229,6 +230,17 @@ int main(int argc, char *argv[])
                             //cout << "pack cnt: " << packet_cnt << endl;
                             index++;
                             //break;
+                            if (havesend + datasize <= imgSize)
+                            {
+                                //memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
+                                havesend += sizeof(s_tmp.data);
+                            }
+                            else
+                            {
+                                //memcpy(s_tmp.data, ptr, imgSize - havesend); //只複製buffer中剩下的部分到sgment裡面
+                                havesend = imgSize;
+                                //break;
+                            }
                         }
                         else
                         {
