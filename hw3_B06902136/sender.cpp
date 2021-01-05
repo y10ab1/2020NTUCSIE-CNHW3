@@ -211,6 +211,7 @@ int main(int argc, char *argv[])
                         if (Tout || (segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size)) < 0)
                         {
                             cout << "TOUt" << endl;
+                            break;
                         }
 
                         ualarm(0, 0);
