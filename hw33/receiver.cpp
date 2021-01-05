@@ -5,6 +5,10 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <string.h>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
 #include "opencv2/opencv.hpp"
 #define datasize 4096
 #define SegDataSize 4096 * 32
@@ -32,6 +36,7 @@ typedef struct
 } segment;
 segment s_tmp;
 char save[32][datasize];
+queue<Mat> framebuf;
 int frame_cnt = 0;
 int frame_play = 0;
 void setIP(char *dst, char *src)
@@ -212,6 +217,7 @@ int main(int argc, char *argv[])
 
                 imgTemp[(frame_cnt) % fb] = imgClient;
                 ++frame_cnt;
+                framebuf.push(imgClient);
 
                 //Press ESC on keyboard to exit
                 // notice: this part is necessary due to openCV's design.
@@ -225,11 +231,16 @@ int main(int argc, char *argv[])
                 memset(&buf, 0, sizeof(buf));
                 ptr = buf;
                 leftSize = imgSize;
-            }
+            } /*
             if (frame_cnt > imgSize / datasize + frame_play)
             {
                 imshow("Video", imgTemp[frame_play % fb]);
                 frame_play++;
+            }*/
+            if (framebuf.size() > fb/2)
+            {
+                imshow("Video", framebuf.front());
+                framebuf.pop();
             }
         }
         memset(&save, 0, sizeof(save));
