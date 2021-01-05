@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     cout << "jjj" << endl;
-                    memcpy(s_tmp.data, ptr + (i-1) * datasize, imgSize - havesend); //只複製buffer中剩下的部分到sgment裡面
+                    memcpy(s_tmp.data, ptr + i * datasize, imgSize - havesend); //只複製buffer中剩下的部分到sgment裡面
                     //havesend = imgSize;
                     //break;
                 }
@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
             }
             for (int i = 0; i < WinSize && havesend <= imgSize; i++)
             {
-                cout << "have sent: " << havesend << endl;
+                //cout << "have sent: " << havesend << endl;
 
                 memset(&s_tmp, 0, sizeof(s_tmp));
                 //while (1)
