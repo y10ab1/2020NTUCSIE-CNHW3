@@ -156,13 +156,12 @@ int main(int argc, char *argv[])
                 index = s_tmp.head.seqNumber;
                 //printf("index = %d\n", index);
                 tmp.pop();
-                if (i == windowSize - 1)
-                {
-                    s_tmp.head.last = 1;
-                }
+
+                s_tmp.head.last = (i == windowSize - 1?)1:s_tmp.head.last;
+                
                 tmp2.push(s_tmp);
                 sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-                printf("send	data	#%d,\twinSize = %d\n", index, windowSize);
+                printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
                 ++index;
             }
             else if (leftSize >= datasize)
@@ -179,7 +178,7 @@ int main(int argc, char *argv[])
                 }
 
                 sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-                printf("send	data	#%d,\t\twinSize = %d\n", index, windowSize);
+                printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
                 tmp2.push(s_tmp);
                 memset(&s_tmp, 0, sizeof(s_tmp));
                 ++index;
@@ -195,7 +194,7 @@ int main(int argc, char *argv[])
                 }
 
                 sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-                printf("send	data	#%d,\twinSize = %d\n", index, windowSize);
+                printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
                 tmp2.push(s_tmp);
                 memset(&s_tmp, 0, sizeof(s_tmp));
                 ++index;
@@ -231,7 +230,7 @@ int main(int argc, char *argv[])
         if (index != last_ack + 1)
         {
             trs = MAX(windowSize / 2, 1);
-            printf("time\tout,\t\t\tthreshold = %d\n", trs);
+            printf("time    out,            threshold = %d\n", trs);
             windowSize = 1;
         }
         else
