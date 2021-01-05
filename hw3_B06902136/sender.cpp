@@ -201,7 +201,7 @@ int main(int argc, char *argv[])
             }
             for (int i = 0; i < WinSize && havesend <= imgSize; i++)
             {
-                //cout << "have sent: " << havesend << endl;
+                cout << "have sent: " << havesend << endl;
 
                 memset(&s_tmp, 0, sizeof(s_tmp));
                 //while (1)
