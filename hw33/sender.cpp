@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
                 //printf("index = %d\n", index);
                 tmp.pop();
 
-                s_tmp.head.last = (i == windowSize - 1?)1:s_tmp.head.last;
+                s_tmp.head.last = (i == windowSize - 1)? 1:s_tmp.head.last;
                 
                 tmp2.push(s_tmp);
                 sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
