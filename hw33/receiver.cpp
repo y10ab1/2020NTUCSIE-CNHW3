@@ -106,8 +106,8 @@ int main(int argc, char *argv[])
     memset(&s_tmp, 0, sizeof(s_tmp));
     index++;
 
-    char *w = strtok(resolution, " ");
-    char *h = strtok(NULL, " ");
+    //char *w = strtok(resolution, " ");
+   // char *h = strtok(NULL, " ");
     int width = atoi(strtok(resolution, " "));
     int height = atoi(strtok(NULL, " "));
     //allocate container to load frames
