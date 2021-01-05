@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
             else if (s_tmp.head.seqNumber == index)
             {
                 printf("recv	data	#%d\n", index);
-                memcpy(save[i], s_tmp.data, datasize));
+                memcpy(save[i], s_tmp.data, datasize);
                 memset(&s_tmp, 0, sizeof(s_tmp));
                 s_tmp.head.ack = 1;
                 s_tmp.head.ackNumber = index;
