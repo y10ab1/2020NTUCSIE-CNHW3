@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     cout << "jjj" << endl;
-                    memcpy(s_tmp.data, ptr + i * datasize, imgSize - havesend); //只複製buffer中剩下的部分到sgment裡面
+                    memcpy(s_tmp.data, ptr + (i-1) * datasize, imgSize - havesend); //只複製buffer中剩下的部分到sgment裡面
                     //havesend = imgSize;
                     //break;
                 }
@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
                 {
                     printf("get     ack	#%d\n", index);
                     memset(&s_tmp, 0, sizeof(s_tmp));
-                    ptr += sizeof(s_tmp.data);
+                    
                     //packet_cnt++;
                     //cout << "pack cnt: " << packet_cnt << endl;
                     index++;
@@ -231,6 +231,7 @@ int main(int argc, char *argv[])
                     {
                         //memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
                         havesend += sizeof(s_tmp.data);
+                        ptr += sizeof(s_tmp.data);
                     }
                     else
                     {
