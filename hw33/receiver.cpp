@@ -43,7 +43,7 @@ void setIP(char *dst, char *src)
     }
 }
 
-void makepacket(int index)
+void makepacket(int index, int i)
 {
     memcpy(save[i], s_tmp.data, datasize);
     memset(&s_tmp, 0, sizeof(s_tmp));
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
             {
                 printf("recv	data	#%d\n", index);
 
-                makepacket(index);
+                makepacket(index, i);
                 sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send    ack     #%d\n", index);
                 ++index;
