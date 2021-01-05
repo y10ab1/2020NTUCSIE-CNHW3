@@ -203,20 +203,20 @@ int main(int argc, char *argv[])
 
                 imgTemp[(frame_cnt) % fb] = imgClient;
                 ++frame_cnt;
-                if (frame_cnt > fb - 1)
-                    imshow("Video", imgTemp[frame_cnt % fb]);
 
                 memset(&buf, 0, sizeof(buf));
                 ptr = buf;
                 leftSize = imgSize;
-                //Press ESC on keyboard to exit
-                // notice: this part is necessary due to openCV's design.
-                // waitKey means a delay to get the next frame.
-                char c = (char)waitKey(2);
-                if (c == 27)
-                {
-                    break;
-                }
+            }
+            if (frame_cnt > fb - 1)
+                imshow("Video", imgTemp[frame_cnt % fb]);
+            //Press ESC on keyboard to exit
+            // notice: this part is necessary due to openCV's design.
+            // waitKey means a delay to get the next frame.
+            char c = (char)waitKey(2);
+            if (c == 27)
+            {
+                break;
             }
         }
         memset(&save, 0, sizeof(save));
