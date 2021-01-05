@@ -186,6 +186,7 @@ int main(int argc, char *argv[])
                 {
                     cout << "jjj" << endl;
                     memcpy(s_tmp.data, ptr + i * datasize, imgSize - havesend); //只複製buffer中剩下的部分到sgment裡面
+                    cout << "jjk" << endl;
                     //havesend = imgSize;
                     //break;
                 }
