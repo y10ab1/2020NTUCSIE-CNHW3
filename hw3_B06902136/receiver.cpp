@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    printf("recv	data	#%d\n", index);
+                    printf("drop	data	#%d\n", s_tmp.head.seqNumber);
                     memset(&s_tmp, 0, sizeof(s_tmp));
                     s_tmp.head.ack = 1;
                     s_tmp.head.ackNumber = index;
