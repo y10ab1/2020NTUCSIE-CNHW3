@@ -208,13 +208,13 @@ int main(int argc, char *argv[])
             memcpy(iptr + buffer_cnt, buffer, 32 * datasize); //Buffer 滿了就把他丟到frame裡面
             buffer_cnt += 32 * datasize;
 
-            cout << "recv date : " << buffer_cnt << endl;
+            //cout << "recv date : " << buffer_cnt << endl;
         }
         else
         {
             memcpy(iptr + buffer_cnt, buffer, imgSize - buffer_cnt); //Buffer 滿了就把他丟到frame裡面
             buffer_cnt = imgSize;
-            cout << "recv date : " << buffer_cnt << endl;
+            //cout << "recv date : " << buffer_cnt << endl;
         }
 
         startWindowThread();

@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
 
                 segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
 
-                cout << "have sent: " << havesend << endl;
+                //cout << "have sent: " << havesend << endl;
                 if (segment_size > 0) //有送成功的話
                 {
                     printf("send	data	#%d,    winSize = %d\n", index, WinSize);
