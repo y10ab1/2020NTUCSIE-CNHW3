@@ -204,15 +204,14 @@ int main(int argc, char *argv[])
 
                 imgTemp[(frame_cnt) % fb] = imgClient;
                 ++frame_cnt;
-
+                if (frame_cnt > fb - 1)
+                {
+                    imshow("Video", imgTemp[frame_cnt % fb]);
+                    //frame_play++;
+                }
                 memset(&buf, 0, sizeof(buf));
                 ptr = buf;
                 leftSize = imgSize;
-            }
-            if (frame_cnt > fb - 1)
-            {
-                imshow("Video", imgTemp[frame_play % fb]);
-                frame_play++;
             }
 
             //Press ESC on keyboard to exit
