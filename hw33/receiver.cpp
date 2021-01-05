@@ -6,8 +6,8 @@
 #include <netinet/in.h>
 #include <string.h>
 #include "opencv2/opencv.hpp"
-
 #define datasize 4096
+
 #define BUFFSIZE 32
 
 using namespace cv;
@@ -26,7 +26,7 @@ typedef struct
 typedef struct
 {
     header head;
-    char data[datasize];
+    char data[4096];
 } segment;
 
 void setIP(char *dst, char *src)
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     // client
     Mat imgClient;
     // get the resolution of the video
-    char resolution[datasize] = {0};
+    char resolution[4096] = {0};
 
     segment_size = recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
     printf("recv	data	#%d\n", index);
@@ -106,8 +106,10 @@ int main(int argc, char *argv[])
     memset(&s_tmp, 0, sizeof(s_tmp));
     index++;
 
-    int width = atoi(strtok(resolution, " "));
-    int height = atoi(strtok(NULL, " "));
+    char *w = strtok(resolution, " ");
+    char *h = strtok(NULL, " ");
+    int width = atoi(w);
+    int height = atoi(h);
     //allocate container to load frames
     imgClient = Mat::zeros(height, width, CV_8UC3);
     // ensure the memory is continuous (for efficiency issue.)
@@ -116,9 +118,9 @@ int main(int argc, char *argv[])
         imgClient = imgClient.clone();
     }
     int imgSize = imgClient.total() * imgClient.elemSize();
-    //printf("w %d, h %d, imgsize %d\n", width, height, imgSize);
+    printf("w %d, h %d, imgsize %d\n", width, height, imgSize);
 
-    char save[32][datasize];
+    char save[32][4096];
     uchar buf[imgSize];
     int leftSize = imgSize;
     uchar *ptr = buf;
@@ -162,14 +164,15 @@ int main(int argc, char *argv[])
         while (1)
         {
             recvfrom(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, &agent_size);
+            //if (s_tmp.head.seqNumber > 35) printf("          %d %d\n", s_tmp.head.seqNumber, index);
             printf("drop    data    #%d\n", s_tmp.head.seqNumber);
-            //int last = s_tmp.head.last;
+            int last = s_tmp.head.last;
             memset(&s_tmp, 0, sizeof(s_tmp));
             s_tmp.head.ack = 1;
             s_tmp.head.ackNumber = index;
             sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
             printf("send    ack     #%d\n", index);
-            if (s_tmp.head.last == 1)
+            if (last == 1)
             {
                 ++index;
                 break;
