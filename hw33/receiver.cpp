@@ -29,7 +29,8 @@ typedef struct
     header head;
     char data[datasize];
 } segment;
-
+segment s_tmp;
+char save[32][datasize];
 void setIP(char *dst, char *src)
 {
     if (strcmp(src, "0.0.0.0") == 0 || strcmp(src, "local") == 0 || strcmp(src, "localhost"))
@@ -41,7 +42,15 @@ void setIP(char *dst, char *src)
         sscanf(src, "%s", dst);
     }
 }
-segment s_tmp;
+
+void makepacket(int index)
+{
+    memcpy(save[i], s_tmp.data, datasize);
+    memset(&s_tmp, 0, sizeof(s_tmp));
+    s_tmp.head.ack = 1;
+    s_tmp.head.ackNumber = index;
+    return;
+}
 int main(int argc, char *argv[])
 {
     int receiversocket, portNum, nBytes;
@@ -119,7 +128,6 @@ int main(int argc, char *argv[])
     int imgSize = imgClient.total() * imgClient.elemSize();
     //printf("w %d, h %d, imgsize %d\n", width, height, imgSize);
 
-    char save[32][datasize];
     int leftSize = imgSize;
     uchar buf[imgSize];
     uchar *ptr = buf;
@@ -141,10 +149,8 @@ int main(int argc, char *argv[])
             else if (s_tmp.head.seqNumber == index)
             {
                 printf("recv	data	#%d\n", index);
-                memcpy(save[i], s_tmp.data, datasize);
-                memset(&s_tmp, 0, sizeof(s_tmp));
-                s_tmp.head.ack = 1;
-                s_tmp.head.ackNumber = index;
+
+                makepacket(index);
                 sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send    ack     #%d\n", index);
                 ++index;
