@@ -74,8 +74,6 @@ int main(int argc, char *argv[])
     char ip[2][50];
     int port[2], i;
 
-    queue<uchar *> framebuf;
-
     if (argc != 5)
     {
         fprintf(stderr, "用法: %s <agent IP> <recv IP> <agent port> <recv port>\n", argv[0]);
@@ -150,6 +148,7 @@ int main(int argc, char *argv[])
             imgTemp[i] = imgTemp[i].clone();
         }
     }
+    queue<uchar[imgSize]> framebuf;
 
     int leftSize = imgSize;
     uchar buf[imgSize];
