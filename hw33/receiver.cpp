@@ -210,9 +210,9 @@ int main(int argc, char *argv[])
                 uchar *iptr = imgClient.data;
                 memcpy(iptr, buf, imgSize);
 
-                //imgTemp[(frame_cnt) % fb] = imgClient;
-                //++frame_cnt;
-                imshow("Video", imgClient);
+                imgTemp[(frame_cnt) % fb] = imgClient;
+                ++frame_cnt;
+
                 //Press ESC on keyboard to exit
                 // notice: this part is necessary due to openCV's design.
                 // waitKey means a delay to get the next frame.
@@ -225,6 +225,11 @@ int main(int argc, char *argv[])
                 memset(&buf, 0, sizeof(buf));
                 ptr = buf;
                 leftSize = imgSize;
+            }
+            if (frame_cnt > fb - 1)
+            {
+                imshow("Video", imgTemp[frame_play % fb]);
+                frame_play++;
             }
         }
         memset(&save, 0, sizeof(save));
