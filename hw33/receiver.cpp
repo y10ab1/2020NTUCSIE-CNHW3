@@ -7,6 +7,7 @@
 #include <string.h>
 #include "opencv2/opencv.hpp"
 #define datasize 4096
+#define SegDataSize 4096 * 32
 
 #define BUFFSIZE 32
 
@@ -106,7 +107,6 @@ int main(int argc, char *argv[])
     memset(&s_tmp, 0, sizeof(s_tmp));
     index++;
 
-
     int width = atoi(strtok(resolution, " "));
     int height = atoi(strtok(NULL, " "));
     //allocate container to load frames
@@ -183,8 +183,8 @@ int main(int argc, char *argv[])
             if (leftSize >= sizeof(save[i]))
             {
                 memcpy(ptr, save[i], sizeof(save[i]));
-                leftSize -= sizeof(save[i]);
-                ptr += sizeof(save[i]);
+                leftSize -= sizeof(datasize);
+                ptr += sizeof(datasize);
             }
             else
             {
@@ -193,17 +193,18 @@ int main(int argc, char *argv[])
                 memcpy(iptr, buf, imgSize);
 
                 imshow("Video", imgClient);
+
+                memset(&buf, 0, sizeof(buf));
+                ptr = buf;
+                leftSize = imgSize;
                 //Press ESC on keyboard to exit
                 // notice: this part is necessary due to openCV's design.
                 // waitKey means a delay to get the next frame.
-                char c = (char)waitKey(3.3333);
+                char c = (char)waitKey(2);
                 if (c == 27)
                 {
                     break;
                 }
-                memset(&buf, 0, sizeof(buf));
-                ptr = buf;
-                leftSize = imgSize;
             }
         }
         memset(&save, 0, sizeof(save));
