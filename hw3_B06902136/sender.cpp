@@ -33,7 +33,7 @@ typedef struct
 int Threshold = 16;
 int WinSize = 1;
 bool Tout = 0;
-int segment_size = 0;
+//int segment_size = 0;
 
 void setIP(char *dst, char *src)
 {
@@ -45,16 +45,6 @@ void setIP(char *dst, char *src)
     {
         sscanf(src, "%s", dst);
     }
-}
-void sigalrm_fn(int sig)
-{
-
-    printf("time    out,            threshold=%d\n", max(Threshold / 2, 1));
-    Tout = 1;
-    WinSize = 1;
-    segment_size = -1;
-
-    return;
 }
 
 int main(int argc, char *argv[])
@@ -109,7 +99,7 @@ int main(int argc, char *argv[])
     sender_size = sizeof(sender);
     agent_size = sizeof(agent);
 
-    int index = 0;
+    int segment_size, index = 0;
 
     struct timeval timeout = {0, 50000}; //0.05s
 
