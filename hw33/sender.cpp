@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     char ip[2][50];
     int port[2], i;
 
-    int windowSize = 1, trs = 16;
+    int windowSize = 1, threshold = 16;
 
     if (argc != 6)
     {
@@ -229,13 +229,13 @@ int main(int argc, char *argv[])
         }
         if (index != last_ack + 1)
         {
-            trs = MAX(windowSize / 2, 1);
-            printf("time    out,            threshold = %d\n", trs);
+            threshold = MAX(windowSize / 2, 1);
+            printf("time    out,            threshold = %d\n", threshold);
             windowSize = 1;
         }
         else
         {
-            windowSize = (windowSize > trs) ? windowSize + 1 : windowSize * 2;
+            windowSize = (windowSize > threshold) ? windowSize + 1 : windowSize * 2;
         }
         index = last_ack + 1;
         segment aa, bb;
