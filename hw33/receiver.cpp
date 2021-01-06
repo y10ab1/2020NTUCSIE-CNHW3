@@ -191,13 +191,13 @@ int main(int argc, char *argv[])
         {
             recvfrom(receiversocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
             printf("drop    data    #%d\n", s_tmp.head.seqNumber);
-            int last = s_tmp.head.last;
+            bool last = s_tmp.head.last;
 
             makepacket(index);
             sendto(receiversocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
             printf("send    ack     #%d\n", index);
 
-            if (last == 1)
+            if (last)
             {
                 ++index;
                 break;
@@ -218,8 +218,6 @@ int main(int argc, char *argv[])
                 uchar *iptr = imgClient.data;
                 memcpy(iptr, buf, imgSize);
 
-                imgTemp[(frame_cnt) % fb] = imgClient;
-                ++frame_cnt;
                 imshow("Video", imgClient);
 
                 //Press ESC on keyboard to exit
@@ -235,13 +233,6 @@ int main(int argc, char *argv[])
                 ptr = buf;
                 leftSize = imgSize;
             }
-            /*
-            if (frame_cnt > imgSize / (datasize * 32) + frame_play)
-            {
-
-                imshow("Video", imgTemp[frame_play % fb]);
-                frame_play++;
-            }*/
         }
         memset(&save, 0, sizeof(save));
     }

@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
 
                 tmp2.push(s_tmp);
                 sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
-                printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
+                printf("rsend	data	#%d,    windowSize = %d\n", index, windowSize);
                 ++index;
             }
             else if (leftSize >= datasize) //如果frame中剩下的沒傳出的data大於一個segment可以傳的大小
@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
 
                 sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
-                tmp2.push(s_tmp);
+                tmp2.push(s_tmp); //已經送了這個s_tmp的packet
                 memset(&s_tmp, 0, sizeof(s_tmp));
                 ++index;
             }
@@ -251,21 +251,19 @@ int main(int argc, char *argv[])
             }
             else
             {
-                aa = tmp.front();
-                bb = tmp2.front();
-                if (aa.head.seqNumber < bb.head.seqNumber)
+                if (tmp.front().head.seqNumber < tmp2.front().head.seqNumber)
                 {
-                    tmp3.push(aa);
+                    tmp3.push(tmp.front());
                     tmp.pop();
                 }
                 else if (aa.head.seqNumber > bb.head.seqNumber)
                 {
-                    tmp3.push(bb);
+                    tmp3.push(tmp2.front());
                     tmp2.pop();
                 }
                 else
                 {
-                    tmp3.push(aa);
+                    tmp3.push(tmp.front());
                     tmp.pop();
                     tmp2.pop();
                 }
@@ -281,7 +279,6 @@ int main(int argc, char *argv[])
             //printf("%d!!!  ", index);
             if (tmp.front().head.seqNumber < index)
             {
-                //printf("%d  ", tmp.front().head.seqNumber);
                 tmp.pop();
             }
             else
