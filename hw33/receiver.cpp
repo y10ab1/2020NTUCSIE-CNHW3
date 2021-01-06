@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        Printf("flush\n"); //每32個Segment
+        printf("flush\n"); //每32個Segment
         memset(&save, 0, sizeof(save));
     }
     ////////////////////////////////////////////////////
