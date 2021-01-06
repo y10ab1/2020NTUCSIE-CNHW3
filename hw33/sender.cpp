@@ -226,13 +226,13 @@ int main(int argc, char *argv[])
             threshold = MAX(windowSize / 2, 1);
             printf("time    out,            threshold = %d\n", threshold);
             windowSize = 1;
-            
+            index = last_ack + 1;
         }
         else //PKT都有收到，調整winSize
         {
             windowSize = (windowSize > threshold) ? windowSize + 1 : windowSize * 2;
         }
-        index = last_ack + 1;
+        
 
         while (1)
         {
