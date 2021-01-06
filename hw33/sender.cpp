@@ -159,11 +159,8 @@ int main(int argc, char *argv[])
             {
                 Packet = ResendPKT.front();
                 index = Packet.head.seqNumber;
-
                 ResendPKT.pop_front();
-
                 Packet.head.last = (i == windowSize - 1) ? 1 : Packet.head.last;
-
                 SentPKT.push_back(Packet);
                 sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("rsend	data	#%d,    windowSize = %d\n", index, windowSize);
@@ -173,12 +170,9 @@ int main(int argc, char *argv[])
             {
                 memcpy(Packet.data, ptr, sizeof(Packet.data));
                 Packet.head.seqNumber = index;
-
                 ptr += datasize;
                 leftSize -= datasize;
-
                 Packet.head.last = (i == windowSize - 1) ? 1 : Packet.head.last;
-
                 sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
                 SentPKT.push_back(Packet); //已經送了這個Packet的packet
@@ -189,16 +183,13 @@ int main(int argc, char *argv[])
             {
                 memcpy(Packet.data, ptr, leftSize);
                 Packet.head.seqNumber = index;
-
                 Packet.head.last = (i == windowSize - 1) ? 1 : Packet.head.last;
-
                 sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
                 SentPKT.push_back(Packet);
                 memset(&Packet, 0, sizeof(Packet));
                 ++index;
 
-                //int ending = cap->read(imgServer);//
                 if (!(cap->read(imgServer))) //讀下一張frame，若沒有影片了
                 {
                     Packet.head.seqNumber = index;
@@ -237,78 +228,18 @@ int main(int argc, char *argv[])
         {
             windowSize = (windowSize > threshold) ? windowSize + 1 : windowSize * 2;
         }
-        /*
-        while (1)
-        {
-            if (ResendPKT.empty() && SentPKT.empty())
-            {
-                break;
-            }
-            else if (!ResendPKT.empty() && SentPKT.empty())
-            {
-                TTTTTTTT.push_back(ResendPKT.front());
-                ResendPKT.pop_front();
-            }
-            else if (ResendPKT.empty() && !SentPKT.empty())
-            {
-                TTTTTTTT.push_back(SentPKT.front());
-                SentPKT.pop_front();
-            }
-            else
-            {
-                if (ResendPKT.front().head.seqNumber < SentPKT.front().head.seqNumber)
-                {
-                    TTTTTTTT.push_back(ResendPKT.front());
-                    ResendPKT.pop_front();
-                }
-                else if (ResendPKT.front().head.seqNumber > SentPKT.front().head.seqNumber)
-                {
-                    TTTTTTTT.push_back(SentPKT.front());
-                    SentPKT.pop_front();
-                }
-                else
-                {
-                    TTTTTTTT.push_back(ResendPKT.front());
-                    ResendPKT.pop_front();
-                    SentPKT.pop_front();
-                }
-            }
-        }
-        ResendPKT = TTTTTTTT;
-        while (!SentPKT.empty())
-            SentPKT.pop_front();
-        while (!TTTTTTTT.empty())
-            TTTTTTTT.pop_front();
-        while (!ResendPKT.empty())
-        {
-            if (ResendPKT.front().head.seqNumber < index)
-            {
-                ResendPKT.pop_front();
-            }
-            else
-                break;
-        }*/
-
+        //檢查已經送出的PKT，如果他的SEQnumber比目前index大，加入ResendPKT
         while (!SentPKT.empty())
         {
             if (SentPKT.front().head.seqNumber >= index)
-            {
                 ResendPKT.push_back(SentPKT.front());
-            }
-
             SentPKT.pop_front();
         }
 
         sort(ResendPKT.begin(), ResendPKT.end(), cmp);
-        /*for (segment K : ResendPKT)
-        {
-            cout << "SEQ: " << K.head.seqNumber << endl;
-        }*/
 
         while (!ResendPKT.empty() && ResendPKT.front().head.seqNumber < index)
-        {
             ResendPKT.pop_front();
-        }
     }
     ////////////////////////////////////////////////////
     cap->release();
