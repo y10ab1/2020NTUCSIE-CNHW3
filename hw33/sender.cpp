@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     segment Packet;
     struct sockaddr_in sender, agent;
     socklen_t sender_size, agent_size;
-    deque<segment> ResendPKT, SentPKT, TTTTTTTT;
+    queue<segment> ResendPKT, SentPKT, TTTTTTTT;
     char ip[2][50];
     int port[2], i;
 
@@ -160,11 +160,11 @@ int main(int argc, char *argv[])
                 Packet = ResendPKT.front();
                 index = Packet.head.seqNumber;
 
-                ResendPKT.pop_front();
+                ResendPKT.pop();
 
                 Packet.head.last = (i == windowSize - 1) ? 1 : Packet.head.last;
 
-                SentPKT.push_back(Packet);
+                SentPKT.push(Packet);
                 sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("rsend	data	#%d,    windowSize = %d\n", index, windowSize);
                 ++index;
@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
 
                 sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
-                SentPKT.push_back(Packet); //已經送了這個Packet的packet
+                SentPKT.push(Packet); //已經送了這個Packet的packet
                 memset(&Packet, 0, sizeof(Packet));
                 ++index;
             }
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
 
                 sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
-                SentPKT.push_back(Packet);
+                SentPKT.push(Packet);
                 memset(&Packet, 0, sizeof(Packet));
                 ++index;
 
@@ -237,7 +237,7 @@ int main(int argc, char *argv[])
         {
             windowSize = (windowSize > threshold) ? windowSize + 1 : windowSize * 2;
         }
-
+        
         while (1)
         {
             if (ResendPKT.empty() && SentPKT.empty())
@@ -246,44 +246,44 @@ int main(int argc, char *argv[])
             }
             else if (!ResendPKT.empty() && SentPKT.empty())
             {
-                TTTTTTTT.push_back(ResendPKT.front());
-                ResendPKT.pop_front();
+                TTTTTTTT.push(ResendPKT.front());
+                ResendPKT.pop();
             }
             else if (ResendPKT.empty() && !SentPKT.empty())
             {
-                TTTTTTTT.push_back(SentPKT.front());
-                SentPKT.pop_front();
+                TTTTTTTT.push(SentPKT.front());
+                SentPKT.pop();
             }
             else
             {
                 if (ResendPKT.front().head.seqNumber < SentPKT.front().head.seqNumber)
                 {
-                    TTTTTTTT.push_back(ResendPKT.front());
-                    ResendPKT.pop_front();
+                    TTTTTTTT.push(ResendPKT.front());
+                    ResendPKT.pop();
                 }
                 else if (ResendPKT.front().head.seqNumber > SentPKT.front().head.seqNumber)
                 {
-                    TTTTTTTT.push_back(SentPKT.front());
-                    SentPKT.pop_front();
+                    TTTTTTTT.push(SentPKT.front());
+                    SentPKT.pop();
                 }
                 else
                 {
-                    TTTTTTTT.push_back(ResendPKT.front());
-                    ResendPKT.pop_front();
-                    SentPKT.pop_front();
+                    TTTTTTTT.push(ResendPKT.front());
+                    ResendPKT.pop();
+                    SentPKT.pop();
                 }
             }
         }
         ResendPKT = TTTTTTTT;
         while (!SentPKT.empty())
-            SentPKT.pop_front();
+            SentPKT.pop();
         while (!TTTTTTTT.empty())
-            TTTTTTTT.pop_front();
+            TTTTTTTT.pop();
         while (!ResendPKT.empty())
         {
             if (ResendPKT.front().head.seqNumber < index)
             {
-                ResendPKT.pop_front();
+                ResendPKT.pop();
             }
             else
                 break;
@@ -291,7 +291,7 @@ int main(int argc, char *argv[])
         /*
         while (!SentPKT.empty() && SentPKT.front() >= index)
         {
-            ResendPKT.push_back(SentPKT.front());
+            ResendPKT.push(SentPKT.front());
         }
         sort()*/
     }
