@@ -34,6 +34,11 @@ typedef struct
     char data[datasize];
 } segment;
 
+bool Segcmp(segment s1, segment s2)
+{
+    return s1.head.seqNumber < s2.head.seqNumber;
+}
+
 void setIP(char *dst, char *src)
 {
     if (strcmp(src, "0.0.0.0") == 0 || strcmp(src, "local") == 0 || strcmp(src, "localhost"))
@@ -53,7 +58,7 @@ int main(int argc, char *argv[])
     segment Packet;
     struct sockaddr_in sender, agent;
     socklen_t sender_size, agent_size;
-    queue<segment> ResendPKT, SentPKT, TTTTTTTT;
+    deque<segment> ResendPKT, SentPKT, TTTTTTTT;
     char ip[2][50];
     int port[2], i;
 
@@ -283,6 +288,12 @@ int main(int argc, char *argv[])
             else
                 break;
         }
+        /*
+        while (!SentPKT.empty() && SentPKT.front() >= index)
+        {
+            ResendPKT.push(SentPKT.front());
+        }
+        sort()*/
     }
     ////////////////////////////////////////////////////
     cap->release();
