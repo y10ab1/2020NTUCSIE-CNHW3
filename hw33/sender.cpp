@@ -155,11 +155,11 @@ int main(int argc, char *argv[])
                 Packet = ResendPKT.front();
                 index = Packet.head.seqNumber;
 
-                ResendPKT.pop();
+                ResendPKT.pop_front();
 
                 Packet.head.last = (i == windowSize - 1) ? 1 : Packet.head.last;
 
-                SentPKT.push(Packet);
+                SentPKT.push_back(Packet);
                 sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("rsend	data	#%d,    windowSize = %d\n", index, windowSize);
                 ++index;
@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
 
                 sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
-                SentPKT.push(Packet); //已經送了這個Packet的packet
+                SentPKT.push_back(Packet); //已經送了這個Packet的packet
                 memset(&Packet, 0, sizeof(Packet));
                 ++index;
             }
@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
 
                 sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
-                SentPKT.push(Packet);
+                SentPKT.push_back(Packet);
                 memset(&Packet, 0, sizeof(Packet));
                 ++index;
 
@@ -241,44 +241,44 @@ int main(int argc, char *argv[])
             }
             else if (!ResendPKT.empty() && SentPKT.empty())
             {
-                TTTTTTTT.push(ResendPKT.front());
-                ResendPKT.pop();
+                TTTTTTTT.push_back(ResendPKT.front());
+                ResendPKT.pop_front();
             }
             else if (ResendPKT.empty() && !SentPKT.empty())
             {
-                TTTTTTTT.push(SentPKT.front());
-                SentPKT.pop();
+                TTTTTTTT.push_back(SentPKT.front());
+                SentPKT.pop_front();
             }
             else
             {
                 if (ResendPKT.front().head.seqNumber < SentPKT.front().head.seqNumber)
                 {
-                    TTTTTTTT.push(ResendPKT.front());
-                    ResendPKT.pop();
+                    TTTTTTTT.push_back(ResendPKT.front());
+                    ResendPKT.pop_front();
                 }
                 else if (ResendPKT.front().head.seqNumber > SentPKT.front().head.seqNumber)
                 {
-                    TTTTTTTT.push(SentPKT.front());
-                    SentPKT.pop();
+                    TTTTTTTT.push_back(SentPKT.front());
+                    SentPKT.pop_front();
                 }
                 else
                 {
-                    TTTTTTTT.push(ResendPKT.front());
-                    ResendPKT.pop();
-                    SentPKT.pop();
+                    TTTTTTTT.push_back(ResendPKT.front());
+                    ResendPKT.pop_front();
+                    SentPKT.pop_front();
                 }
             }
         }
         ResendPKT = TTTTTTTT;
         while (!SentPKT.empty())
-            SentPKT.pop();
+            SentPKT.pop_front();
         while (!TTTTTTTT.empty())
-            TTTTTTTT.pop();
+            TTTTTTTT.pop_front();
         while (!ResendPKT.empty())
         {
             if (ResendPKT.front().head.seqNumber < index)
             {
-                ResendPKT.pop();
+                ResendPKT.pop_front();
             }
             else
                 break;
