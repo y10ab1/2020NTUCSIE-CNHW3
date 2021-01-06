@@ -36,7 +36,7 @@ typedef struct
 
 bool cmp(segment s1, segment s2)
 {
-    return s1 < s2;
+    return s1.head.seqNumber < s2.head.seqNumber;
 }
 
 void setIP(char *dst, char *src)
@@ -288,13 +288,13 @@ int main(int argc, char *argv[])
             else
                 break;
         }*/
-        while (!SentPKT.empty() && SentPKT >= index)
+        while (!SentPKT.empty() && SentPKT.front().head.seqNumber >= index)
         {
             ResendPKT.push_back(SentPKT.front());
             SentPKT.pop_front();
         }
         sort(ResendPKT, ResendPKT + ResendPKT.size(), cmp);
-        while (!ResendPKT.empty() && ResendPKT < index)
+        while (!ResendPKT.empty() && ResendPKT.front().head.seqNumber < index)
         {
             ResendPKT.pop_front();
         }
