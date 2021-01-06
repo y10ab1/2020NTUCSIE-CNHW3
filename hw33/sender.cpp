@@ -256,7 +256,7 @@ int main(int argc, char *argv[])
                     tmp3.push(tmp.front());
                     tmp.pop();
                 }
-                else if (aa.head.seqNumber > bb.head.seqNumber)
+                else if (tmp.front().head.seqNumber > tmp2.front().head.seqNumber)
                 {
                     tmp3.push(tmp2.front());
                     tmp2.pop();
