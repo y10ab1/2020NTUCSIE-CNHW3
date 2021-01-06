@@ -34,11 +34,6 @@ typedef struct
     char data[datasize];
 } segment;
 
-bool Segcmp(segment s1, segment s2)
-{
-    return s1.head.seqNumber < s2.head.seqNumber;
-}
-
 void setIP(char *dst, char *src)
 {
     if (strcmp(src, "0.0.0.0") == 0 || strcmp(src, "local") == 0 || strcmp(src, "localhost"))
@@ -238,6 +233,7 @@ int main(int argc, char *argv[])
             windowSize = (windowSize > threshold) ? windowSize + 1 : windowSize * 2;
         }
         
+
         while (1)
         {
             if (ResendPKT.empty() && SentPKT.empty())
@@ -288,12 +284,6 @@ int main(int argc, char *argv[])
             else
                 break;
         }
-        /*
-        while (!SentPKT.empty() && SentPKT.front() >= index)
-        {
-            ResendPKT.push(SentPKT.front());
-        }
-        sort()*/
     }
     ////////////////////////////////////////////////////
     cap->release();
