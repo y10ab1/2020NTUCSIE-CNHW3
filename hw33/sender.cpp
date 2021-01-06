@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     segment Packet;
     struct sockaddr_in sender, agent;
     socklen_t sender_size, agent_size;
-    queue<segment> ResendPKT, SentPKT, TTTTTTTT;
+    deque<segment> ResendPKT, SentPKT, TTTTTTTT;
     char ip[2][50];
     int port[2], i;
 
@@ -232,7 +232,6 @@ int main(int argc, char *argv[])
         {
             windowSize = (windowSize > threshold) ? windowSize + 1 : windowSize * 2;
         }
-        
 
         while (1)
         {
