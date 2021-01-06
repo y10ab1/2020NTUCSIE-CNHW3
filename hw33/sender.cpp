@@ -157,25 +157,25 @@ int main(int argc, char *argv[])
                 //printf("index = %d\n", index);
                 tmp.pop();
 
-                s_tmp.head.last = (i == windowSize - 1)? 1:s_tmp.head.last;
-                
+                s_tmp.head.last = (i == windowSize - 1) ? 1 : s_tmp.head.last;
+
                 tmp2.push(s_tmp);
                 sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
                 ++index;
             }
-            else if (leftSize >= datasize)
+            else if (leftSize >= datasize) //如果frame中還有剩下的data沒傳完
             {
                 memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
                 s_tmp.head.seqNumber = index;
-                int sentSize = sizeof(s_tmp.data);
 
                 ptr += datasize;
                 leftSize -= datasize;
-                if (i == windowSize - 1)
+                /* if (i == windowSize - 1)
                 {
                     s_tmp.head.last = 1;
-                }
+                }*/
+                s_tmp.head.last = (i == windowSize - 1) ? 1 : s_tmp.head.last;
 
                 sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
@@ -188,10 +188,11 @@ int main(int argc, char *argv[])
                 memcpy(s_tmp.data, ptr, leftSize);
                 s_tmp.head.seqNumber = index;
 
-                if (i == windowSize - 1)
+                /* if (i == windowSize - 1)
                 {
                     s_tmp.head.last = 1;
-                }
+                }*/
+                s_tmp.head.last = (i == windowSize - 1) ? 1 : s_tmp.head.last;
 
                 sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
