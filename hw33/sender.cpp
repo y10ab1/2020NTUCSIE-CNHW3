@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
             {
                 s_tmp = tmp.front();
                 index = s_tmp.head.seqNumber;
-                //printf("index = %d\n", index);
+
                 tmp.pop();
 
                 s_tmp.head.last = (i == windowSize - 1) ? 1 : s_tmp.head.last;
@@ -164,17 +164,14 @@ int main(int argc, char *argv[])
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
                 ++index;
             }
-            else if (leftSize >= datasize) //如果frame中還有剩下的data沒傳完
+            else if (leftSize >= datasize) //如果frame中剩下的沒傳出的data大於一個segment可以傳的大小
             {
                 memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
                 s_tmp.head.seqNumber = index;
 
                 ptr += datasize;
                 leftSize -= datasize;
-                /* if (i == windowSize - 1)
-                {
-                    s_tmp.head.last = 1;
-                }*/
+
                 s_tmp.head.last = (i == windowSize - 1) ? 1 : s_tmp.head.last;
 
                 sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
@@ -183,15 +180,11 @@ int main(int argc, char *argv[])
                 memset(&s_tmp, 0, sizeof(s_tmp));
                 ++index;
             }
-            else
+            else //leftSIze<datasize
             {
                 memcpy(s_tmp.data, ptr, leftSize);
                 s_tmp.head.seqNumber = index;
 
-                /* if (i == windowSize - 1)
-                {
-                    s_tmp.head.last = 1;
-                }*/
                 s_tmp.head.last = (i == windowSize - 1) ? 1 : s_tmp.head.last;
 
                 sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
@@ -200,8 +193,8 @@ int main(int argc, char *argv[])
                 memset(&s_tmp, 0, sizeof(s_tmp));
                 ++index;
 
-                int result = cap->read(imgServer);
-                if (!result)
+                //int ending = cap->read(imgServer);//
+                if (!(cap->read(imgServer))) //讀下一張frame，若沒有影片了
                 {
                     s_tmp.head.seqNumber = index;
                     s_tmp.head.fin = 1;
