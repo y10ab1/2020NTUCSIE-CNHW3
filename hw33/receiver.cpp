@@ -214,13 +214,14 @@ int main(int argc, char *argv[])
             }
             else
             {
-                printf("flush\n");
+
                 memcpy(ptr, save[i], leftSize);
                 uchar *iptr = imgClient.data;
                 memcpy(iptr, buf, imgSize);
-
                 imshow("Video", imgClient);
-
+                memset(&buf, 0, sizeof(buf));
+                ptr = buf;
+                leftSize = imgSize;
                 //Press ESC on keyboard to exit
                 // notice: this part is necessary due to openCV's design.
                 // waitKey means a delay to get the next frame.
@@ -229,12 +230,9 @@ int main(int argc, char *argv[])
                 {
                     break;
                 }
-
-                memset(&buf, 0, sizeof(buf));
-                ptr = buf;
-                leftSize = imgSize;
             }
         }
+        Printf("flush\n"); //每32個Segment
         memset(&save, 0, sizeof(save));
     }
     ////////////////////////////////////////////////////
