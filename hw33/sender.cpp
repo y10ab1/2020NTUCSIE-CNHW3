@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 {
     int sendersocket, portNum, nBytes;
     char videoname[1000];
-    segment s_tmp;
+    segment Packet;
     struct sockaddr_in sender, agent;
     socklen_t sender_size, agent_size;
     queue<segment> tmp, tmp2, tmp3;
@@ -124,16 +124,16 @@ int main(int argc, char *argv[])
     //printf("w %d, h %d, imgsize %d\n", width, height, imgSize);
     while (1)
     {
-        memset(&s_tmp, 0, sizeof(s_tmp));
-        s_tmp.head.fin = 1;
-        s_tmp.head.seqNumber = index;
-        sprintf(s_tmp.data, "%d %d", width, height);
-        segment_size = sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
+        memset(&Packet, 0, sizeof(Packet));
+        Packet.head.fin = 1;
+        Packet.head.seqNumber = index;
+        sprintf(Packet.data, "%d %d", width, height);
+        segment_size = sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
         printf("send	data	#%d,        winSize = %d\n", index, windowSize);
-        memset(&s_tmp, 0, sizeof(s_tmp));
-        segment_size = recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
+        memset(&Packet, 0, sizeof(Packet));
+        segment_size = recvfrom(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
         printf("get     ack	#%d\n", index);
-        memset(&s_tmp, 0, sizeof(s_tmp));
+        memset(&Packet, 0, sizeof(Packet));
         ++index;
         ++windowSize;
         if (segment_size > 0)
@@ -152,56 +152,56 @@ int main(int argc, char *argv[])
         {
             if (!tmp.empty())
             {
-                s_tmp = tmp.front();
-                index = s_tmp.head.seqNumber;
+                Packet = tmp.front();
+                index = Packet.head.seqNumber;
 
                 tmp.pop();
 
-                s_tmp.head.last = (i == windowSize - 1) ? 1 : s_tmp.head.last;
+                Packet.head.last = (i == windowSize - 1) ? 1 : Packet.head.last;
 
-                tmp2.push(s_tmp);
-                sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
+                tmp2.push(Packet);
+                sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("rsend	data	#%d,    windowSize = %d\n", index, windowSize);
                 ++index;
             }
             else if (leftSize >= datasize) //如果frame中剩下的沒傳出的data大於一個segment可以傳的大小
             {
-                memcpy(s_tmp.data, ptr, sizeof(s_tmp.data));
-                s_tmp.head.seqNumber = index;
+                memcpy(Packet.data, ptr, sizeof(Packet.data));
+                Packet.head.seqNumber = index;
 
                 ptr += datasize;
                 leftSize -= datasize;
 
-                s_tmp.head.last = (i == windowSize - 1) ? 1 : s_tmp.head.last;
+                Packet.head.last = (i == windowSize - 1) ? 1 : Packet.head.last;
 
-                sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
+                sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
-                tmp2.push(s_tmp); //已經送了這個s_tmp的packet
-                memset(&s_tmp, 0, sizeof(s_tmp));
+                tmp2.push(Packet); //已經送了這個Packet的packet
+                memset(&Packet, 0, sizeof(Packet));
                 ++index;
             }
             else //leftSIze<datasize
             {
-                memcpy(s_tmp.data, ptr, leftSize);
-                s_tmp.head.seqNumber = index;
+                memcpy(Packet.data, ptr, leftSize);
+                Packet.head.seqNumber = index;
 
-                s_tmp.head.last = (i == windowSize - 1) ? 1 : s_tmp.head.last;
+                Packet.head.last = (i == windowSize - 1) ? 1 : Packet.head.last;
 
-                sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
+                sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
-                tmp2.push(s_tmp);
-                memset(&s_tmp, 0, sizeof(s_tmp));
+                tmp2.push(Packet);
+                memset(&Packet, 0, sizeof(Packet));
                 ++index;
 
                 //int ending = cap->read(imgServer);//
                 if (!(cap->read(imgServer))) //讀下一張frame，若沒有影片了
                 {
-                    s_tmp.head.seqNumber = index;
-                    s_tmp.head.fin = 1;
-                    sendto(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
+                    Packet.head.seqNumber = index;
+                    Packet.head.fin = 1;
+                    sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                     printf("send	fin\n");
-                    memset(&s_tmp, 0, sizeof(s_tmp));
-                    recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
+                    memset(&Packet, 0, sizeof(Packet));
+                    recvfrom(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size);
                     printf("recv    finack\n");
                     return 0;
                 }
@@ -214,11 +214,11 @@ int main(int argc, char *argv[])
         int get = 0, last_ack;
         for (int i = 0; i < windowSize; ++i)
         {
-            if (recvfrom(sendersocket, &s_tmp, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size) > 0)
+            if (recvfrom(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, &agent_size) > 0)
             {
-                last_ack = s_tmp.head.ackNumber;
-                printf("get     ack	#%d\n", s_tmp.head.ackNumber);
-                memset(&s_tmp, 0, sizeof(s_tmp));
+                last_ack = Packet.head.ackNumber;
+                printf("get     ack	#%d\n", Packet.head.ackNumber);
+                memset(&Packet, 0, sizeof(Packet));
             }
         }
         if (index != last_ack + 1) //上面有ack沒收到
@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
             windowSize = (windowSize > threshold) ? windowSize + 1 : windowSize * 2;
         }
         index = last_ack + 1;
-        segment aa, bb;
+
         while (1)
         {
             if (tmp.empty() && tmp2.empty())
