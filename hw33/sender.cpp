@@ -296,7 +296,7 @@ int main(int argc, char *argv[])
         }
 
         sort(ResendPKT.begin(), ResendPKT.end(), cmp);
-        for (suto K : ResendPKT)
+        for (auto K : ResendPKT)
         {
             cout << "SEQ: " << K << endl;
         }
