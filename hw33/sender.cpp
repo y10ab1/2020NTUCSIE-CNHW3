@@ -296,7 +296,7 @@ int main(int argc, char *argv[])
         }
 
         sort(ResendPKT.begin(), ResendPKT.end(), cmp);
-        for (auto K : ResendPKT)
+        for (segment K : ResendPKT)
         {
             cout << "SEQ: " << K.head.seqNumber << endl;
         }
