@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     segment Packet;
     struct sockaddr_in sender, agent;
     socklen_t sender_size, agent_size;
-    queue<segment> tmp, SentPKT, tmp3;
+    queue<segment> ResendPKT, SentPKT, TTTTTTTT;
     char ip[2][50];
     int port[2], i;
 
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     if (argc != 6)
     {
         fprintf(stderr, "用法: %s <sender IP> <agent IP> <sender port> <agent port> <videoname>\n", argv[0]);
-        fprintf(stderr, "例如: ./sender 127.0.0.1 127.0.0.1 8887 8888 tmp.mpg\n");
+        fprintf(stderr, "例如: ./sender 127.0.0.1 127.0.0.1 8887 8888 ResendPKT.mpg\n");
         exit(1);
     }
     else
@@ -150,12 +150,12 @@ int main(int argc, char *argv[])
     {
         for (int i = 0; i < windowSize; ++i)
         {
-            if (!tmp.empty())
+            if (!ResendPKT.empty())
             {
-                Packet = tmp.front();
+                Packet = ResendPKT.front();
                 index = Packet.head.seqNumber;
 
-                tmp.pop();
+                ResendPKT.pop();
 
                 Packet.head.last = (i == windowSize - 1) ? 1 : Packet.head.last;
 
@@ -235,51 +235,50 @@ int main(int argc, char *argv[])
 
         while (1)
         {
-            if (tmp.empty() && SentPKT.empty())
+            if (ResendPKT.empty() && SentPKT.empty())
             {
                 break;
             }
-            else if (!tmp.empty() && SentPKT.empty())
+            else if (!ResendPKT.empty() && SentPKT.empty())
             {
-                tmp3.push(tmp.front());
-                tmp.pop();
+                TTTTTTTT.push(ResendPKT.front());
+                ResendPKT.pop();
             }
-            else if (tmp.empty() && !SentPKT.empty())
+            else if (ResendPKT.empty() && !SentPKT.empty())
             {
-                tmp3.push(SentPKT.front());
+                TTTTTTTT.push(SentPKT.front());
                 SentPKT.pop();
             }
             else
             {
-                if (tmp.front().head.seqNumber < SentPKT.front().head.seqNumber)
+                if (ResendPKT.front().head.seqNumber < SentPKT.front().head.seqNumber)
                 {
-                    tmp3.push(tmp.front());
-                    tmp.pop();
+                    TTTTTTTT.push(ResendPKT.front());
+                    ResendPKT.pop();
                 }
-                else if (tmp.front().head.seqNumber > SentPKT.front().head.seqNumber)
+                else if (ResendPKT.front().head.seqNumber > SentPKT.front().head.seqNumber)
                 {
-                    tmp3.push(SentPKT.front());
+                    TTTTTTTT.push(SentPKT.front());
                     SentPKT.pop();
                 }
                 else
                 {
-                    tmp3.push(tmp.front());
-                    tmp.pop();
+                    TTTTTTTT.push(ResendPKT.front());
+                    ResendPKT.pop();
                     SentPKT.pop();
                 }
             }
         }
-        tmp = tmp3;
+        ResendPKT = TTTTTTTT;
         while (!SentPKT.empty())
             SentPKT.pop();
-        while (!tmp3.empty())
-            tmp3.pop();
-        while (!tmp.empty())
+        while (!TTTTTTTT.empty())
+            TTTTTTTT.pop();
+        while (!ResendPKT.empty())
         {
-            //printf("%d!!!  ", index);
-            if (tmp.front().head.seqNumber < index)
+            if (ResendPKT.front().head.seqNumber < index)
             {
-                tmp.pop();
+                ResendPKT.pop();
             }
             else
                 break;
