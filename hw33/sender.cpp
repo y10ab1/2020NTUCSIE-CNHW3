@@ -289,13 +289,18 @@ int main(int argc, char *argv[])
                 break;
         }*/
 
-        while (!SentPKT.empty() && SentPKT.front().head.seqNumber < index)
+        while (!SentPKT.empty() && SentPKT.front().head.seqNumber >= index)
         {
             ResendPKT.push_back(SentPKT.front());
             SentPKT.pop_front();
         }
 
         sort(ResendPKT.begin(), ResendPKT.end(), cmp);
+        for (suto K : ResendPKT)
+        {
+            cout << "SEQ: " << K << endl;
+        }
+
         while (!ResendPKT.empty() && ResendPKT.front().head.seqNumber < index)
         {
             ResendPKT.pop_front();
