@@ -288,12 +288,14 @@ int main(int argc, char *argv[])
             else
                 break;
         }*/
+
         while (!SentPKT.empty() && SentPKT.front().head.seqNumber >= index)
         {
             ResendPKT.push_back(SentPKT.front());
             SentPKT.pop_front();
         }
-        sort(ResendPKT, ResendPKT + ResendPKT.size(), cmp);
+
+        sort(ResendPKT.begin(), ResendPKT.end(), cmp);
         while (!ResendPKT.empty() && ResendPKT.front().head.seqNumber < index)
         {
             ResendPKT.pop_front();
