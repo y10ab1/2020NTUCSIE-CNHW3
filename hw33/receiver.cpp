@@ -214,6 +214,7 @@ int main(int argc, char *argv[])
             }
             else
             {
+                printf("flush\n");
                 memcpy(ptr, save[i], leftSize);
                 uchar *iptr = imgClient.data;
                 memcpy(iptr, buf, imgSize);
