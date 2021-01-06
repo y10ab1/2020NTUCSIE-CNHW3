@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     segment Packet;
     struct sockaddr_in sender, agent;
     socklen_t sender_size, agent_size;
-    queue<segment> tmp, tmp2, tmp3;
+    queue<segment> tmp, SentPKT, tmp3;
     char ip[2][50];
     int port[2], i;
 
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
 
                 Packet.head.last = (i == windowSize - 1) ? 1 : Packet.head.last;
 
-                tmp2.push(Packet);
+                SentPKT.push(Packet);
                 sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("rsend	data	#%d,    windowSize = %d\n", index, windowSize);
                 ++index;
@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
 
                 sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
-                tmp2.push(Packet); //已經送了這個Packet的packet
+                SentPKT.push(Packet); //已經送了這個Packet的packet
                 memset(&Packet, 0, sizeof(Packet));
                 ++index;
             }
@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
 
                 sendto(sendersocket, &Packet, sizeof(segment), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send	data	#%d,    windowSize = %d\n", index, windowSize);
-                tmp2.push(Packet);
+                SentPKT.push(Packet);
                 memset(&Packet, 0, sizeof(Packet));
                 ++index;
 
@@ -235,43 +235,43 @@ int main(int argc, char *argv[])
 
         while (1)
         {
-            if (tmp.empty() && tmp2.empty())
+            if (tmp.empty() && SentPKT.empty())
             {
                 break;
             }
-            else if (!tmp.empty() && tmp2.empty())
+            else if (!tmp.empty() && SentPKT.empty())
             {
                 tmp3.push(tmp.front());
                 tmp.pop();
             }
-            else if (tmp.empty() && !tmp2.empty())
+            else if (tmp.empty() && !SentPKT.empty())
             {
-                tmp3.push(tmp2.front());
-                tmp2.pop();
+                tmp3.push(SentPKT.front());
+                SentPKT.pop();
             }
             else
             {
-                if (tmp.front().head.seqNumber < tmp2.front().head.seqNumber)
+                if (tmp.front().head.seqNumber < SentPKT.front().head.seqNumber)
                 {
                     tmp3.push(tmp.front());
                     tmp.pop();
                 }
-                else if (tmp.front().head.seqNumber > tmp2.front().head.seqNumber)
+                else if (tmp.front().head.seqNumber > SentPKT.front().head.seqNumber)
                 {
-                    tmp3.push(tmp2.front());
-                    tmp2.pop();
+                    tmp3.push(SentPKT.front());
+                    SentPKT.pop();
                 }
                 else
                 {
                     tmp3.push(tmp.front());
                     tmp.pop();
-                    tmp2.pop();
+                    SentPKT.pop();
                 }
             }
         }
         tmp = tmp3;
-        while (!tmp2.empty())
-            tmp2.pop();
+        while (!SentPKT.empty())
+            SentPKT.pop();
         while (!tmp3.empty())
             tmp3.pop();
         while (!tmp.empty())
