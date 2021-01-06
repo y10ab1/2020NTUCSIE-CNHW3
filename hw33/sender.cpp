@@ -221,13 +221,13 @@ int main(int argc, char *argv[])
                 memset(&s_tmp, 0, sizeof(s_tmp));
             }
         }
-        if (index != last_ack + 1)
+        if (index != last_ack + 1) //上面有ack沒收到
         {
             threshold = MAX(windowSize / 2, 1);
             printf("time    out,            threshold = %d\n", threshold);
             windowSize = 1;
         }
-        else
+        else //都對，調整winSize
         {
             windowSize = (windowSize > threshold) ? windowSize + 1 : windowSize * 2;
         }
@@ -241,15 +241,13 @@ int main(int argc, char *argv[])
             }
             else if (!tmp.empty() && tmp2.empty())
             {
-                aa = tmp.front();
+                tmp3.push(tmp.front());
                 tmp.pop();
-                tmp3.push(aa);
             }
             else if (tmp.empty() && !tmp2.empty())
             {
-                aa = tmp2.front();
+                tmp3.push(tmp2.front());
                 tmp2.pop();
-                tmp3.push(aa);
             }
             else
             {
