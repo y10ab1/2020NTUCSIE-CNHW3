@@ -289,7 +289,7 @@ int main(int argc, char *argv[])
                 break;
         }*/
 
-        while (!SentPKT.empty() && SentPKT.front().head.seqNumber >= index)
+        while (!SentPKT.empty() && SentPKT.front().head.seqNumber < index)
         {
             ResendPKT.push_back(SentPKT.front());
             SentPKT.pop_front();
