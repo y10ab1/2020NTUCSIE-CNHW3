@@ -166,6 +166,7 @@ int main(int argc, char *argv[])
                 s_tmp.head.ack = 1, s_tmp.head.fin = 1;
                 sendto(receiversocket, &s_tmp, sizeof(s_tmp), 0, (struct sockaddr *)&agent, agent_size);
                 printf("send    finack\n");
+                return 0;
             }
             else if (s_tmp.head.seqNumber == index)
             {
